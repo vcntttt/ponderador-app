@@ -2,7 +2,7 @@
 
 # dependencies
 node_modules/
-
+material-fernando/
 # Expo
 .expo/
 dist/
