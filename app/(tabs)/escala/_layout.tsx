@@ -17,7 +17,7 @@ export default function Layout() {
           ),
         }}
       />
-      <Stack.Screen name="results" />
+      <Stack.Screen name="results" options={{ title: "Resultados" }} />
     </Stack>
   );
 }
