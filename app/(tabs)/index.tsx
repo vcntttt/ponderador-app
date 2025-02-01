@@ -1,10 +1,10 @@
-import { Text } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { ThemedText } from "@/components/ui/ThemedText";
+import { ThemedView } from "@/components/ui/ThemedView";
 
 export default function HomeScreen() {
   return (
-    <SafeAreaView className="px-2">
-      <Text>Hola</Text>
-    </SafeAreaView>
+    <ThemedView>
+      <ThemedText>Hola</ThemedText>
+    </ThemedView>
   );
 }

@@ -1,20 +1,19 @@
-import Ionicons from "@expo/vector-icons/build/Ionicons";
 import { Stack } from "expo-router/stack";
+import { useThemeColor } from "@/hooks/useThemeColor";
 
 export default function Layout() {
+  const backgroundColor = useThemeColor({ }, "background");
   return (
     <Stack
       screenOptions={{
         headerShown: true,
+        headerStyle: { backgroundColor },
       }}
     >
       <Stack.Screen
         name="index"
         options={{
           title: "Escala de Notas",
-          headerLeft: () => (
-            <Ionicons name="stats-chart" color="#fff" size={24} />
-          ),
         }}
       />
       <Stack.Screen name="results" options={{ title: "Resultados" }} />
