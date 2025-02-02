@@ -1,9 +1,9 @@
 import { View } from 'react-native'
+import { router } from 'expo-router';
+import { Controller, useForm } from 'react-hook-form';
 import { ThemedText } from "@/components/ui/ThemedText";
 import ThemedTextInput from "@/components/ui/ThemedTextInput";
 import CustomButton from "@/components/ui/CustomButton";
-import { Controller, useForm } from 'react-hook-form';
-import { router } from 'expo-router';
 
 type FormData = {
   maxScore: string;
@@ -20,14 +20,13 @@ const EscalaNotasForm = () => {
     formState: { errors },
   } = useForm<FormData>({
     defaultValues: {
-      maxScore: "10",
+      maxScore: "40",
       minGrade: "1.0",
       maxGrade: "7.0",
       exigencia: "60",
       passingScore: "4.0",
     },
   });
-
 
   const onSubmit = (data: FormData) => {
     const maxScoreNum = parseFloat(data.maxScore);
@@ -36,9 +35,7 @@ const EscalaNotasForm = () => {
     const exigenciaPercent = parseFloat(data.exigencia) / 100;
     const requiredScore = exigenciaPercent * maxScoreNum;
     const passingGradeProvided = parseFloat(data.passingScore);
-
-    const scale: { score: number; grade: string }[] = [];
-
+    const scale: { score: number; grade: string; type: string }[] = [];
     for (let score = 1; score <= maxScoreNum; score++) {
       let calculatedGrade;
       if (score <= requiredScore) {
@@ -51,9 +48,8 @@ const EscalaNotasForm = () => {
           ((maxGradeNum - passingGradeProvided) * (score - requiredScore)) /
             (maxScoreNum - requiredScore);
       }
-      scale.push({ score, grade: calculatedGrade.toFixed(2) });
+      scale.push({ score, grade: calculatedGrade.toFixed(1), type: score <= requiredScore ? "reprobado" : "aprobado" });
     }
-
     router.push({
       pathname: "/escala/results",
       params: {
@@ -80,7 +76,6 @@ const EscalaNotasForm = () => {
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}
-            className="border border-gray-300 rounded-md p-3 text-base"
           />
         )}
       />
@@ -104,7 +99,7 @@ const EscalaNotasForm = () => {
               onBlur={onBlur}
               onChangeText={onChange}
               value={value}
-              className="border border-gray-300 rounded-md p-3 text-base"
+
             />
           )}
         />
@@ -127,10 +122,6 @@ const EscalaNotasForm = () => {
               onBlur={onBlur}
               onChangeText={onChange}
               value={value}
-              style={{
-                color: "red",
-              }}
-              className="border border-gray-300 rounded-md p-3 text-base"
             />
           )}
         />
@@ -155,7 +146,7 @@ const EscalaNotasForm = () => {
               onBlur={onBlur}
               onChangeText={onChange}
               value={value}
-              className="border border-gray-300 rounded-md p-3 text-base"
+
             />
           )}
         />
@@ -178,7 +169,7 @@ const EscalaNotasForm = () => {
               onBlur={onBlur}
               onChangeText={onChange}
               value={value}
-              className="border border-gray-300 rounded-md p-3 text-base"
+
             />
           )}
         />

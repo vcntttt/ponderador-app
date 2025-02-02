@@ -1,13 +1,16 @@
 import React from "react";
-import { SafeAreaView, ScrollView, Text, View } from "react-native";
+import { ScrollView, View } from "react-native";
 import { useLocalSearchParams } from "expo-router";
+import { ThemedView } from "@/components/ui/ThemedView";
+import { ThemedText } from "@/components/ui/ThemedText";
+import clsx from "clsx";
 
 export default function ResultsScreen() {
   const { scale } = useLocalSearchParams<{ scale?: string }>();
   const scaleData = scale ? JSON.parse(scale) : [];
 
   return (
-    <SafeAreaView style={{ flex: 1, padding: 20, backgroundColor: "#fff" }}>
+    <ThemedView>
       <ScrollView>
         <View
           style={{
@@ -16,26 +19,48 @@ export default function ResultsScreen() {
             paddingBottom: 8,
             marginBottom: 8,
           }}
+          className="border-light-text dark:border-dark-text"
         >
-          <Text style={{ flex: 1, fontWeight: "bold" }}>Puntaje</Text>
-          <Text style={{ flex: 1, fontWeight: "bold" }}>Nota</Text>
+          <ThemedText style={{ flex: 1, fontWeight: "bold" }}>
+            Puntaje
+          </ThemedText>
+          <ThemedText style={{ flex: 1, fontWeight: "bold" }}>Nota</ThemedText>
         </View>
 
-        {scaleData.map((item: { grade: number; score: string }, index: number) => (
-          <View
-            key={index}
-            style={{
-              flexDirection: "row",
-              paddingVertical: 8,
-              borderBottomWidth: 0.5,
-              borderColor: "#ccc",
-            }}
-          >
-            <Text style={{ flex: 1 }}>{item.score}</Text>
-            <Text style={{ flex: 1 }}>{item.grade}</Text>
-          </View>
-        ))}
+        {scaleData.map(
+          (
+            item: { grade: number; score: string; type: string },
+            index: number
+          ) => (
+            <View
+              key={index}
+              style={{
+                flexDirection: "row",
+                paddingVertical: 8,
+                borderBottomWidth: 0.5,
+                borderColor: "#ccc",
+              }}
+            >
+              <ThemedText
+                className={clsx("flex-1", {
+                  "!text-red-500": item.type === "reprobado",
+                  "!text-blue-400": item.type === "aprobado",
+                })}
+              >
+                {item.score}
+              </ThemedText>
+              <ThemedText
+                className={clsx("flex-1", {
+                  "!text-red-500": item.type === "reprobado",
+                  "!text-blue-400": item.type === "aprobado",
+                })}
+              >
+                {item.grade}
+              </ThemedText>
+            </View>
+          )
+        )}
       </ScrollView>
-    </SafeAreaView>
+    </ThemedView>
   );
 }
