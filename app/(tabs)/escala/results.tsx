@@ -1,5 +1,5 @@
 import React from "react";
-import { ScrollView, View } from "react-native";
+import { FlatList } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { ThemedView } from "@/components/ui/ThemedView";
 import { ThemedText } from "@/components/ui/ThemedText";
@@ -8,59 +8,41 @@ import clsx from "clsx";
 export default function ResultsScreen() {
   const { scale } = useLocalSearchParams<{ scale?: string }>();
   const scaleData = scale ? JSON.parse(scale) : [];
+  console.log(scaleData);
 
   return (
     <ThemedView>
-      <ScrollView>
-        <View
-          style={{
-            flexDirection: "row",
-            borderBottomWidth: 1,
-            paddingBottom: 8,
-            marginBottom: 8,
-          }}
-          className="border-light-text dark:border-dark-text"
-        >
-          <ThemedText style={{ flex: 1, fontWeight: "bold" }}>
-            Puntaje
-          </ThemedText>
-          <ThemedText style={{ flex: 1, fontWeight: "bold" }}>Nota</ThemedText>
-        </View>
-
-        {scaleData.map(
-          (
-            item: { grade: number; score: string; type: string },
-            index: number
-          ) => (
-            <View
-              key={index}
-              style={{
-                flexDirection: "row",
-                paddingVertical: 8,
-                borderBottomWidth: 0.5,
-                borderColor: "#ccc",
-              }}
+      <FlatList
+        data={scaleData}
+        keyExtractor={(_, index) => index.toString()}
+        ListHeaderComponent={
+          <ThemedView className="flex-row border-b border-light-text dark:border-dark-text pb-2 mb-2">
+            <ThemedText className="flex-1 font-bold">Puntaje</ThemedText>
+            <ThemedText className="flex-1 font-bold">Nota</ThemedText>
+          </ThemedView>
+        }
+        showsVerticalScrollIndicator={false}
+        renderItem={({ item }) => (
+          <ThemedView className="flex-row py-2 border-b border-gray-300">
+            <ThemedText
+              className={clsx("flex-1", {
+                "!text-red-500": item.type === "reprobado",
+                "!text-blue-600 dark:!text-blue-400": item.type === "aprobado",
+              })}
             >
-              <ThemedText
-                className={clsx("flex-1", {
-                  "!text-red-500": item.type === "reprobado",
-                  "!text-blue-400": item.type === "aprobado",
-                })}
-              >
-                {item.score}
-              </ThemedText>
-              <ThemedText
-                className={clsx("flex-1", {
-                  "!text-red-500": item.type === "reprobado",
-                  "!text-blue-400": item.type === "aprobado",
-                })}
-              >
-                {item.grade}
-              </ThemedText>
-            </View>
-          )
+              {item.score}
+            </ThemedText>
+            <ThemedText
+              className={clsx("flex-1", {
+                "!text-red-500": item.type === "reprobado",
+                "!text-blue-600 dark:!text-blue-400": item.type === "aprobado",
+              })}
+            >
+              {item.grade}
+            </ThemedText>
+          </ThemedView>
         )}
-      </ScrollView>
+      />
     </ThemedView>
   );
 }
