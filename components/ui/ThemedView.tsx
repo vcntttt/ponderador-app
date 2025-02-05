@@ -4,11 +4,13 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export type ThemedViewProps = ViewProps & {
   safe?: boolean;
+  container?: boolean;
   className?: string;
 };
 
 export function ThemedView({
   safe = false,
+  container = false,
   className,
   ...otherProps
 }: ThemedViewProps) {
@@ -23,6 +25,7 @@ export function ThemedView({
           paddingTop: safe ? insets.top : 8,
           paddingBottom: safe ? insets.bottom : 8,
         },
+        container && { flex: 1 , justifyContent: "center", alignItems: "center" },
       ]}
     />
   );
