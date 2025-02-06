@@ -3,7 +3,7 @@ import { Text, type TextProps } from "react-native";
 
 export type ThemedTextProps = TextProps & {
   className?: string;
-  type?: "default" | "title" | "subtitle" | "card";
+  type?: "default" | "title" | "subtitle" | "card" | "label";
 };
 
 export function ThemedText({
@@ -19,6 +19,7 @@ export function ThemedText({
         "text-xl font-medium": type === "subtitle",
         "text-light-text dark:text-dark-text bg-white dark:bg-black/50 rounded-xl px-4 shadow shadow-black/5 w-full p-3":
           type === "card",
+        "text-gray-500": type === "label",
       })}
       {...rest}
     />
