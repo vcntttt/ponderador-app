@@ -99,7 +99,7 @@ const App = () => {
         />
       </View>
 
-      <ThemedView className="absolute bottom-4 mx-4 flex-row justify-between items-center w-full text-light-text dark:text-dark-text bg-white dark:bg-black/50 rounded-xl px-4 shadow shadow-black/5 p-3">
+      <ThemedView card className="absolute bottom-4 mx-4 flex-row justify-between items-center">
         <ThemedText>Resultado: {resultado.toFixed(2)}</ThemedText>
         <ThemedText className="!text-gray-500">
           {porcentaje.toFixed(0)}%
