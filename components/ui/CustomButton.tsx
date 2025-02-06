@@ -21,7 +21,7 @@ const CustomButton = ({
       onPress={onPress}
       className={clsx(`p-3 rounded-md w-full ${className}`, {
         "bg-light-primary dark:bg-dark-primary": type === "primary",
-        "bg-white dark:bg-black/50": type === "outline",
+        "bg-white dark:!bg-black/50": type === "outline",
       })}
       {...props}
     >
