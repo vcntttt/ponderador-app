@@ -16,7 +16,7 @@ export default function Layout() {
           title: "Escala de Notas",
         }}
       />
-      <Stack.Screen name="results" options={{ title: "Resultados" }} />
+      <Stack.Screen name="results" options={{ title: "Escala Generada" }} />
     </Stack>
   );
 }
