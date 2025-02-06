@@ -2,7 +2,7 @@
 
 # dependencies
 node_modules/
-material-fernando/
+
 # Expo
 .expo/
 dist/
@@ -16,6 +16,7 @@ expo-env.d.ts
 *.p12
 *.key
 *.mobileprovision
+*.apk
 
 # Metro
 .metro-health-check*
