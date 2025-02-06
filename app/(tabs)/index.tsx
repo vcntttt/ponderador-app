@@ -35,12 +35,17 @@ const App = () => {
   });
 
   const notasValues = watch("notas");
-  
+
   // Nota final = Σ (nota * (porcentaje/100))
   const resultado = notasValues.reduce((acc, nota) => {
     const value = parseFloat(nota.value) || 0;
     const percentage = parseFloat(nota.percentage) || 0;
     return acc + value * (percentage / 100);
+  }, 0);
+
+  const porcentaje = notasValues.reduce((acc, nota) => {
+    const percentage = parseFloat(nota.percentage) || 0;
+    return acc + percentage;
   }, 0);
 
   const closeModal = () => setModalVisible(false);
@@ -53,40 +58,40 @@ const App = () => {
           Calculadora
         </ThemedText>
 
-          {fields.map((field, index) => (
-            <View key={field.id} className="flex-row gap-x-4">
-              <Controller
-                control={control}
-                name={`notas.${index}.value`}
-                rules={{ required: "Este campo es requerido" }}
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <ThemedTextInput
-                    className="w-2/3"
-                    placeholder={`Nota`}
-                    keyboardType="numeric"
-                    onBlur={onBlur}
-                    onChangeText={onChange}
-                    value={value}
-                  />
-                )}
-              />
-              <Controller
-                control={control}
-                name={`notas.${index}.percentage`}
-                rules={{ required: "Este campo es requerido" }}
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <ThemedTextInput
-                    className="w-1/3"
-                    placeholder={`%`}
-                    keyboardType="numeric"
-                    onBlur={onBlur}
-                    onChangeText={onChange}
-                    value={value}
-                  />
-                )}
-              />
-            </View>
-          ))}
+        {fields.map((field, index) => (
+          <View key={field.id} className="flex-row gap-x-4">
+            <Controller
+              control={control}
+              name={`notas.${index}.value`}
+              rules={{ required: "Este campo es requerido" }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <ThemedTextInput
+                  className="w-2/3"
+                  placeholder={`Nota`}
+                  keyboardType="numeric"
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                />
+              )}
+            />
+            <Controller
+              control={control}
+              name={`notas.${index}.percentage`}
+              rules={{ required: "Este campo es requerido" }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <ThemedTextInput
+                  className="w-1/3"
+                  placeholder={`%`}
+                  keyboardType="numeric"
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                />
+              )}
+            />
+          </View>
+        ))}
 
         <CustomButton
           title="Nueva Nota"
@@ -94,9 +99,13 @@ const App = () => {
         />
       </View>
 
-      <ThemedText type="card" className="absolute bottom-4 mx-4">
-        Resultado: {resultado.toFixed(2)}
-      </ThemedText>
+      <ThemedView className="absolute bottom-4 mx-4 flex-row justify-between items-center w-full text-light-text dark:text-dark-text bg-white dark:bg-black/50 rounded-xl px-4 shadow shadow-black/5 p-3">
+        <ThemedText>Resultado: {resultado.toFixed(2)}</ThemedText>
+        <ThemedText className="!text-gray-500">
+          {porcentaje.toFixed(0)}%
+        </ThemedText>
+      </ThemedView>
+      <ThemedText>{errors.notas && errors.notas.message}</ThemedText>
     </ThemedView>
   );
 };
