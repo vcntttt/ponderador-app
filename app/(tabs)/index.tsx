@@ -1,15 +1,12 @@
 import React, { useState } from "react";
-import { ScrollView, View } from "react-native";
+import { View } from "react-native";
 import { Controller, useForm, useFieldArray } from "react-hook-form";
 import { ThemedView } from "@/components/ui/ThemedView";
 import CustomButton from "@/components/ui/CustomButton";
 import { ThemedText } from "@/components/ui/ThemedText";
 import ThemedTextInput from "@/components/ui/ThemedTextInput";
 import MyModal from "@/components/calculadora/modal";
-import { Nota, usePonderator } from "@/hooks/usePonderator";
 
-// Definimos la estructura de nuestro formulario.
-// Cada nota es un objeto con 'value' y 'percentage' como strings.
 type FormData = {
   notas: {
     value: string;
@@ -25,7 +22,6 @@ const App = () => {
     formState: { errors },
   } = useForm<FormData>({
     defaultValues: {
-      // Comenzamos con dos notas por defecto.
       notas: [
         { value: "", percentage: "" },
         { value: "", percentage: "" },
@@ -33,24 +29,21 @@ const App = () => {
     },
   });
 
-  // useFieldArray nos permite manejar el array de notas.
   const { fields, append } = useFieldArray({
     control,
     name: "notas",
   });
 
-  const { selectedNota, setSelectedNota, notas, setNotas } = usePonderator();
-
-  const closeModal = () => setModalVisible(false);
-
   const notasValues = watch("notas");
-
+  
   // Nota final = Σ (nota * (porcentaje/100))
   const resultado = notasValues.reduce((acc, nota) => {
     const value = parseFloat(nota.value) || 0;
     const percentage = parseFloat(nota.percentage) || 0;
     return acc + value * (percentage / 100);
   }, 0);
+
+  const closeModal = () => setModalVisible(false);
 
   return (
     <ThemedView container safe>
