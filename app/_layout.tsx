@@ -20,15 +20,21 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
-  const backgroundColor = useThemeColor({ }, "background");
+  const backgroundColor = useThemeColor({}, "background");
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
 
   const theme =
     colorScheme === "dark"
-      ? { ...DarkTheme, colors: { ...DarkTheme.colors, background: backgroundColor } }
-      : { ...DefaultTheme, colors: { ...DefaultTheme.colors, background: backgroundColor } };
+      ? {
+          ...DarkTheme,
+          colors: { ...DarkTheme.colors, background: backgroundColor },
+        }
+      : {
+          ...DefaultTheme,
+          colors: { ...DefaultTheme.colors, background: backgroundColor },
+        };
 
   useEffect(() => {
     if (loaded) {
@@ -44,16 +50,16 @@ export default function RootLayout() {
     <SafeAreaProvider>
       <GestureHandlerRootView>
         <ThemeProvider value={theme}>
-            <Stack>
-              <Stack.Screen
-                name="(tabs)"
-                options={{
-                  headerShown: false,
-                }}
-              />
-              <Stack.Screen name="+not-found" />
-            </Stack>
-            <StatusBar style="auto" />
+          <Stack>
+            <Stack.Screen
+              name="(tabs)"
+              options={{
+                headerShown: false,
+              }}
+            />
+            <Stack.Screen name="+not-found" />
+          </Stack>
+          <StatusBar style="auto" />
         </ThemeProvider>
       </GestureHandlerRootView>
     </SafeAreaProvider>
