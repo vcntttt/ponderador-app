@@ -132,14 +132,14 @@ const App = () => {
             <ThemedTextInput
               className="flex-1 bg-zinc-200"
               placeholder="Nota"
-              keyboardType="numeric"
+              keyboardType="number-pad"
               value={subNote.value}
               onChangeText={(text) => handleSubNoteChange(index, "value", text)}
             />
             <ThemedTextInput
               className="w-1/4 bg-zinc-200"
               placeholder="%"
-              keyboardType="numeric"
+              keyboardType="number-pad"
               value={subNote.percentage}
               onChangeText={(text) =>
                 handleSubNoteChange(index, "percentage", text)
@@ -186,7 +186,7 @@ const App = () => {
                   <ThemedTextInput
                     className="flex-1"
                     placeholder="Nota"
-                    keyboardType="numeric"
+                    keyboardType="number-pad"
                     onBlur={onBlur}
                     onChangeText={onChange}
                     value={value}
@@ -201,7 +201,7 @@ const App = () => {
                   <ThemedTextInput
                     className="w-1/4"
                     placeholder="%"
-                    keyboardType="numeric"
+                    keyboardType="number-pad"
                     onBlur={onBlur}
                     onChangeText={onChange}
                     value={value}

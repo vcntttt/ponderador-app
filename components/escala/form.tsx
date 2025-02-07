@@ -84,7 +84,7 @@ const EscalaNotasForm = () => {
             <ThemedTextInput
               autoFocus
               placeholder="Puntaje máximo"
-              keyboardType="numeric"
+              keyboardType="number-pad"
               onBlur={onBlur}
               onChangeText={onChange}
               value={value}
@@ -120,7 +120,7 @@ const EscalaNotasForm = () => {
             render={({ field: { onChange, onBlur, value } }) => (
               <ThemedTextInput
                 placeholder="Nota mínima"
-                keyboardType="numeric"
+                keyboardType="number-pad"
                 onBlur={onBlur}
                 onChangeText={onChange}
                 value={value}
@@ -155,7 +155,7 @@ const EscalaNotasForm = () => {
             render={({ field: { onChange, onBlur, value } }) => (
               <ThemedTextInput
                 placeholder="Nota máxima"
-                keyboardType="numeric"
+                keyboardType="number-pad"
                 onBlur={onBlur}
                 onChangeText={onChange}
                 value={value}
@@ -192,7 +192,7 @@ const EscalaNotasForm = () => {
             render={({ field: { onChange, onBlur, value } }) => (
               <ThemedTextInput
                 placeholder="Nota aprobatoria"
-                keyboardType="numeric"
+                keyboardType="number-pad"
                 onBlur={onBlur}
                 onChangeText={onChange}
                 value={value}
@@ -223,7 +223,7 @@ const EscalaNotasForm = () => {
             render={({ field: { onChange, onBlur, value } }) => (
               <ThemedTextInput
                 placeholder="Exigencia"
-                keyboardType="numeric"
+                keyboardType="number-pad"
                 onBlur={onBlur}
                 onChangeText={onChange}
                 value={value}

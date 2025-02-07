@@ -16,6 +16,3 @@ export default function ThemedTextInput({ className, ...props }: Props) {
     />
   );
 }
-
-
-// className="border border-gray-300 rounded-md p-3 text-base"
