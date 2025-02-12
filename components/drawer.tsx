@@ -4,8 +4,8 @@ import {
   DrawerItemList,
 } from "@react-navigation/drawer";
 import { ThemedText } from "@/components/ui/ThemedText";
-import CustomButton from "@/components/ui/CustomButton";
 import { ThemedView } from "@/components/ui/ThemedView";
+import { View } from "react-native";
 
 const CustomDrawer = (props: DrawerContentComponentProps) => {
   return (
@@ -14,6 +14,8 @@ const CustomDrawer = (props: DrawerContentComponentProps) => {
         <ThemedText type="title">Ponderador</ThemedText>
       </ThemedView>
       <DrawerItemList {...props} />
+
+      <View className="my-4 bg-black dark:bg-white/80 h-px w-full" />
     </DrawerContentScrollView>
   );
 };
