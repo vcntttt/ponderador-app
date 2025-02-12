@@ -164,7 +164,7 @@ const App = () => {
         <CustomButton title="Guardar" onPress={handleApplySubNotes} />
       </MyModal>
 
-      <View className="flex-1 items-center justify-center gap-4 w-full px-4">
+      <View className="flex-1 items-center mt-24 gap-4 w-full px-4">
         <ThemedText type="title" className="mb-10">
           Calculadora
         </ThemedText>

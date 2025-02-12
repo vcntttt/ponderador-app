@@ -1,7 +1,7 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Platform, ScrollView, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useNavigation } from "expo-router";
 import { ThemedView } from "@/components/ui/ThemedView";
 import { ThemedText } from "@/components/ui/ThemedText";
 import clsx from "clsx";
@@ -34,6 +34,13 @@ export default function ResultsScreen() {
     }
     return subsets;
   }, [orderedData, numColumns]);
+
+  const navigation = useNavigation();
+  useEffect(() => {
+    navigation.setOptions({
+      title: `Escala Generada: ${scaleData?.length - 1} pts`,
+    });
+  }, [scaleData]);
 
   return (
     <ThemedView className="flex-1">
