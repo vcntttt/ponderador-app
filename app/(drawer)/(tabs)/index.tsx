@@ -8,6 +8,7 @@ import ThemedTextInput from "@/components/ui/ThemedTextInput";
 import CustomButton from "@/components/ui/CustomButton";
 import MyModal from "@/components/modal";
 import clsx from "clsx";
+import { ThemedCard } from "@/components/ui/ThemedCard";
 
 type SubNota = {
   value: string;
@@ -117,15 +118,14 @@ const App = () => {
           Dividir Nota
         </ThemedText>
         <ThemedText type="label">Resultado</ThemedText>
-        <ThemedView
-          card
-          className="flex-row justify-between items-center p-3 bg-zinc-200"
+        <ThemedCard
+          className="flex-row justify-between items-center p-3"
         >
-          <ThemedText>{partialResult.toFixed(2)}</ThemedText>
+          <ThemedText className="">{partialResult.toFixed(2)}</ThemedText>
           <ThemedText className="!text-gray-500">
             {partialPercentage.toFixed(0)}%
           </ThemedText>
-        </ThemedView>
+        </ThemedCard>
         <ThemedText type="label">SubNotas</ThemedText>
         {subNotes.map((subNote, index) => (
           <View key={index} className="flex-row items-center gap-x-2 mb-2">
@@ -254,15 +254,14 @@ const App = () => {
         />
       </View>
 
-      <ThemedView
-        card
+      <ThemedCard
         className="absolute bottom-4 mx-4 flex-row justify-between items-center"
       >
         <ThemedText> {resultado.toFixed(2)}</ThemedText>
         <ThemedText className="!text-gray-500">
           {porcentaje.toFixed(0)}%
         </ThemedText>
-      </ThemedView>
+      </ThemedCard>
       {errors.notas && (
         <ThemedText className="text-red-500 mt-1">
           {errors.notas.message}
