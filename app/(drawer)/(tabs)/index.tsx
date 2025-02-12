@@ -6,7 +6,7 @@ import { ThemedView } from "@/components/ui/ThemedView";
 import { ThemedText } from "@/components/ui/ThemedText";
 import ThemedTextInput from "@/components/ui/ThemedTextInput";
 import CustomButton from "@/components/ui/CustomButton";
-import MyModal from "@/components/calculadora/modal";
+import MyModal from "@/components/modal";
 import clsx from "clsx";
 
 type SubNota = {
@@ -164,7 +164,7 @@ const App = () => {
         <CustomButton title="Guardar" onPress={handleApplySubNotes} />
       </MyModal>
 
-      <View className="flex-1 items-center mt-24 gap-4 w-full px-4">
+      <View className="flex-1 items-center mt-24 gap-4 w-full">
         <ThemedText type="title" className="mb-10">
           Calculadora
         </ThemedText>
