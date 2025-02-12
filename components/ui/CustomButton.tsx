@@ -9,7 +9,7 @@ interface Props extends PressableProps {
   type?: "primary" | "outline";
 }
 
-const CustomButton = ({
+export const CustomButton = ({
   title,
   onPress,
   className,
@@ -36,4 +36,3 @@ const CustomButton = ({
     </Pressable>
   );
 };
-export default CustomButton;

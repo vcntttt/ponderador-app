@@ -3,7 +3,7 @@ import { router } from "expo-router";
 import { Controller, useForm } from "react-hook-form";
 import { ThemedText } from "@/components/ui/ThemedText";
 import ThemedTextInput from "@/components/ui/ThemedTextInput";
-import CustomButton from "@/components/ui/CustomButton";
+import { CustomButton } from "@/components/ui/CustomButton";
 
 type FormData = {
   maxScore: string;

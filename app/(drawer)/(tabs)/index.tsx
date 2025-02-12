@@ -5,7 +5,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { ThemedView } from "@/components/ui/ThemedView";
 import { ThemedText } from "@/components/ui/ThemedText";
 import ThemedTextInput from "@/components/ui/ThemedTextInput";
-import CustomButton from "@/components/ui/CustomButton";
+import { CustomButton } from "@/components/ui/CustomButton";
 import MyModal from "@/components/modal";
 import clsx from "clsx";
 import { ThemedCard } from "@/components/ui/ThemedCard";
@@ -118,9 +118,7 @@ const App = () => {
           Dividir Nota
         </ThemedText>
         <ThemedText type="label">Resultado</ThemedText>
-        <ThemedCard
-          className="flex-row justify-between items-center p-3"
-        >
+        <ThemedCard className="flex-row justify-between items-center p-3">
           <ThemedText className="">{partialResult.toFixed(2)}</ThemedText>
           <ThemedText className="!text-gray-500">
             {partialPercentage.toFixed(0)}%
@@ -254,9 +252,7 @@ const App = () => {
         />
       </View>
 
-      <ThemedCard
-        className="absolute bottom-4 mx-4 flex-row justify-between items-center"
-      >
+      <ThemedCard className="absolute bottom-4 mx-4 flex-row justify-between items-center">
         <ThemedText> {resultado.toFixed(2)}</ThemedText>
         <ThemedText className="!text-gray-500">
           {porcentaje.toFixed(0)}%
