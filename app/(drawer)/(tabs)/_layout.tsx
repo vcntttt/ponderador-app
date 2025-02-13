@@ -21,7 +21,7 @@ export default function TabLayout() {
       screenOptions={{
         headerLeft: ({ tintColor }) => (
           <Ionicons
-            name="grid-outline"
+            name="menu"
             color={tintColor}
             size={20}
             className="ml-5 mr-2"

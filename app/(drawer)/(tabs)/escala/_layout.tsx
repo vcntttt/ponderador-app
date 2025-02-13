@@ -2,7 +2,7 @@ import { Stack } from "expo-router/stack";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { Ionicons } from "@expo/vector-icons";
 import { router, useNavigation } from "expo-router";
-import { DrawerActions, StackActions } from "@react-navigation/native";
+import { DrawerActions } from "@react-navigation/native";
 
 export default function Layout() {
   const backgroundColor = useThemeColor({}, "background");
@@ -24,7 +24,7 @@ export default function Layout() {
         headerShadowVisible: false,
         headerLeft: ({ tintColor, canGoBack }) => (
           <Ionicons
-            name={canGoBack ? "chevron-back" : "grid-outline"}
+            name={canGoBack ? "chevron-back" : "menu"}
             color={tintColor}
             size={20}
             className={canGoBack ? "mr-5" : "mr-3"}

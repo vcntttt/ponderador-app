@@ -10,11 +10,11 @@ import { View } from "react-native";
 const CustomDrawer = (props: DrawerContentComponentProps) => {
   return (
     <DrawerContentScrollView {...props} scrollEnabled={false}>
-      <ThemedView className="flex flex-col gap-y-4">
+      {/* <ThemedView className="flex flex-col gap-y-4">
         <ThemedText type="title">Ponderador</ThemedText>
-      </ThemedView>
+      </ThemedView> */}
       {/* <DrawerItemList {...props} /> */}
-      <View className="my-4 bg-black dark:bg-white/80 h-px w-full" />
+      {/* <View className="my-4 bg-black dark:bg-white/80 h-px w-full" /> */}
       <ThemedText>coming soon..</ThemedText>
     </DrawerContentScrollView>
   );
