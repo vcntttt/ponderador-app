@@ -4,7 +4,9 @@ import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { ThemedView } from "@/components/ui/ThemedView";
 import { ThemedText } from "@/components/ui/ThemedText";
+import { ESCALA_SETTINGS_STORAGE_KEY } from "@/constants/storage";
 import clsx from "clsx";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface NotaEscala {
   score: string | number;
@@ -21,6 +23,34 @@ export default function ResultsScreen() {
 
   const { scale } = useLocalSearchParams<{ scale?: string }>();
   const scaleData = scale ? JSON.parse(scale) : [];
+
+  useEffect(() => {
+    async function fetchSettings() {
+      const settings = await AsyncStorage.getItem(ESCALA_SETTINGS_STORAGE_KEY);
+      if (settings) {
+        const { numColumns, ascending } = JSON.parse(settings);
+        setNumColumns(numColumns);
+        setAscending(ascending);
+      }
+    }
+    fetchSettings();
+  }, []);
+
+  async function handleColumnsChange(value: number) {
+    setNumColumns(value);
+    await AsyncStorage.setItem(
+      ESCALA_SETTINGS_STORAGE_KEY,
+      JSON.stringify({ numColumns: value })
+    );
+  }
+
+  async function handleSortOrderChange() {
+    setAscending(!ascending);
+    await AsyncStorage.setItem(
+      ESCALA_SETTINGS_STORAGE_KEY,
+      JSON.stringify({ ascending })
+    );
+  }
 
   const orderedData = useMemo(() => {
     return ascending ? scaleData : [...scaleData].reverse();
@@ -60,7 +90,7 @@ export default function ResultsScreen() {
           <ThemedText>{numColumns}</ThemedText>
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() => setAscending((prev) => !prev)}
+          onPress={() => handleSortOrderChange()}
           className="px-2 py-1 bg-gray-200 dark:bg-gray-700 rounded absolute right-0"
         >
           <ThemedText>
@@ -80,8 +110,8 @@ export default function ResultsScreen() {
               <TouchableOpacity
                 key={option}
                 onPress={() => {
-                  setNumColumns(option);
-                  setDropdownVisible(false);
+                  handleColumnsChange(option)
+                  setDropdownVisible(false)
                 }}
                 className="px-4 py-2"
               >
