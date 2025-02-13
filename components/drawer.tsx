@@ -13,9 +13,9 @@ const CustomDrawer = (props: DrawerContentComponentProps) => {
       <ThemedView className="flex flex-col gap-y-4">
         <ThemedText type="title">Ponderador</ThemedText>
       </ThemedView>
-      <DrawerItemList {...props} />
-
+      {/* <DrawerItemList {...props} /> */}
       <View className="my-4 bg-black dark:bg-white/80 h-px w-full" />
+      <ThemedText>coming soon..</ThemedText>
     </DrawerContentScrollView>
   );
 };

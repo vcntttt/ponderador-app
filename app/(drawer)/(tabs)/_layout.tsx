@@ -28,6 +28,7 @@ export default function TabLayout() {
             onPress={handleHeaderLeftPress}
           />
         ),
+        headerTitleStyle: { color: text },
         headerStyle: {
           backgroundColor,
           elevation: 0, // android
@@ -36,6 +37,7 @@ export default function TabLayout() {
         },
         tabBarActiveTintColor: text,
         headerShown: true,
+        tabBarShowLabel: false,
         tabBarButton: HapticTab,
         tabBarBackground: TabBarBackground,
         tabBarStyle: {
@@ -60,6 +62,15 @@ export default function TabLayout() {
           title: "Escala de Notas",
           tabBarIcon: ({ color }) => (
             <Ionicons name="stats-chart" color={color} size={24} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="settings"
+        options={{
+          title: "Configuración",
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="settings-outline" color={color} size={24} />
           ),
         }}
       />

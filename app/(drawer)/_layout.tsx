@@ -28,13 +28,13 @@ export default function DrawerLayout() {
           title: "",
         }}
       />
-      <Drawer.Screen
+      {/* <Drawer.Screen
         name="settings"
         options={{
           drawerLabel: "Configuración",
           title: "Configuración",
         }}
-      />
+      /> */}
     </Drawer>
   );
 }
