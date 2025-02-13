@@ -6,13 +6,14 @@ import { useColorScheme } from "nativewind";
 import { ThemedCard } from "@/components/ui/ThemedCard";
 import { ThemedText } from "@/components/ui/ThemedText";
 import { THEME_STORAGE_KEY } from "@/constants/storage";
+import { Ionicons } from "@expo/vector-icons";
 
 type Theme = "system" | "dark" | "light";
 
-const radioOptions: { label: string; value: Theme }[] = [
-  { label: "Sistema", value: "system" },
-  { label: "Oscuro", value: "dark" },
-  { label: "Claro", value: "light" },
+const radioOptions: { label: string; value: Theme; icon: any }[] = [
+  { label: "Sistema", value: "system", icon: "contrast-outline" },
+  { label: "Oscuro", value: "dark", icon: "moon-outline" },
+  { label: "Claro", value: "light", icon: "sunny-outline" },
 ];
 
 export default function SettingsScreen() {
@@ -39,9 +40,18 @@ export default function SettingsScreen() {
             onPress={() => handleSelect(option.value)}
             className="flex-row items-center justify-between py-2"
           >
-            <ThemedText className={selectedOption === option.value ? "font-bold" : ""}>
-              {option.label}
-            </ThemedText>
+            <View className="flex-row gap-x-4">
+              <Ionicons
+                name={option.icon}
+                size={24}
+                color={selectedOption === option.value ? "blue" : "gray"}
+              />
+              <ThemedText
+                className={selectedOption === option.value ? "font-bold" : ""}
+              >
+                {option.label}
+              </ThemedText>
+            </View>
             <View className="w-5 h-5 rounded-full border border-gray-400 items-center justify-center">
               {selectedOption === option.value && (
                 <View className="w-3 h-3 rounded-full bg-blue-500" />
