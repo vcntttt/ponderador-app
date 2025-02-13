@@ -2,19 +2,19 @@ import { useEffect } from "react";
 import {
   DarkTheme,
   DefaultTheme,
-  ThemeProvider,
 } from "@react-navigation/native";
 import { useFonts } from "expo-font";
-import { Slot, Stack } from "expo-router";
+import { Slot } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import "react-native-reanimated";
 import { useColorScheme } from "@/hooks/useColorScheme";
-import "./global.css";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useThemeColor } from "@/hooks/useThemeColor";
-import { Drawer } from "expo-router/drawer";
+import { ThemeContextProvider } from "@/context/ThemeContext";
+import "./global.css";
+
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
@@ -49,10 +49,12 @@ export default function RootLayout() {
   return (
     <SafeAreaProvider>
       <GestureHandlerRootView style={{ flex: 1 }}>
-        <ThemeProvider value={theme}>
+        {/* <ThemeProvider value={theme}> */}
+        <ThemeContextProvider>
           <Slot />
           <StatusBar style="auto" />
-        </ThemeProvider>
+        </ThemeContextProvider>
+        {/* </ThemeProvider> */}
       </GestureHandlerRootView>
     </SafeAreaProvider>
   );

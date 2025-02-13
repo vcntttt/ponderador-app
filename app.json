@@ -2,7 +2,7 @@
   "expo": {
     "name": "Ponderador",
     "slug": "ponderador",
-    "version": "0.3.1",
+    "version": "0.4.0",
     "orientation": "portrait",
     "icon": "./assets/images/tools.png",
     "scheme": "myapp",

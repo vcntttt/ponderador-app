@@ -1,30 +1,27 @@
 import React, { useState } from "react";
 import { TouchableOpacity, View } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ThemedView } from "@/components/ui/ThemedView";
-import { useColorScheme } from "nativewind";
 import { ThemedCard } from "@/components/ui/ThemedCard";
 import { ThemedText } from "@/components/ui/ThemedText";
-import { THEME_STORAGE_KEY } from "@/constants/storage";
 import { Ionicons } from "@expo/vector-icons";
+import { useThemeContext } from "../../../context/ThemeContext";
+import { ColorScheme } from "@/types";
 
-type Theme = "system" | "dark" | "light";
-
-const radioOptions: { label: string; value: Theme; icon: any }[] = [
-  { label: "Sistema", value: "system", icon: "contrast-outline" },
+// todo: system option support
+const radioOptions: { label: string; value: ColorScheme; icon: any }[] = [
+  // { label: "Sistema", value: "system", icon: "contrast-outline" },
   { label: "Oscuro", value: "dark", icon: "moon-outline" },
   { label: "Claro", value: "light", icon: "sunny-outline" },
 ];
 
 export default function SettingsScreen() {
-  const { setColorScheme } = useColorScheme();
-  const [selectedOption, setSelectedOption] = useState("system");
+  const { currentTheme, toggleTheme } = useThemeContext();
+  const [selectedOption, setSelectedOption] = useState(currentTheme);
 
-  const handleSelect = async (value: Theme) => {
+  const handleSelect = async (value: ColorScheme) => {
     try {
+      await toggleTheme(value);
       setSelectedOption(value);
-      setColorScheme(value);
-      await AsyncStorage.setItem(THEME_STORAGE_KEY, value);
     } catch (error) {
       console.error("Error al guardar el tema seleccionado:", error);
     }
@@ -44,7 +41,7 @@ export default function SettingsScreen() {
               <Ionicons
                 name={option.icon}
                 size={24}
-                color={selectedOption === option.value ? "blue" : "gray"}
+                color={selectedOption === option.value ? "purple" : "gray"}
               />
               <ThemedText
                 className={selectedOption === option.value ? "font-bold" : ""}
@@ -54,7 +51,7 @@ export default function SettingsScreen() {
             </View>
             <View className="w-5 h-5 rounded-full border border-gray-400 items-center justify-center">
               {selectedOption === option.value && (
-                <View className="w-3 h-3 rounded-full bg-blue-500" />
+                <View className="w-3 h-3 rounded-full bg-light-primary dark:bg-dark-primary" />
               )}
             </View>
           </TouchableOpacity>
