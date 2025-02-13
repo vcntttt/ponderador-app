@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import {
   DarkTheme,
   DefaultTheme,
@@ -12,6 +12,7 @@ import { ColorScheme, Theme } from "@/types";
 
 interface ThemeContextType {
   currentTheme: ColorScheme;
+  isSystemSelected: boolean;
   toggleTheme: (theme: Theme) => void;
 }
 
@@ -26,10 +27,14 @@ export const ThemeContextProvider = ({
 }) => {
   const { colorScheme, setColorScheme } = useColorScheme();
   const backgroundColor = useThemeColor({}, "background");
+  const [isSystemSelected, setIsSystemSelected] = useState(false);
 
   useEffect(() => {
     AsyncStorage.getItem(THEME_STORAGE_KEY).then((theme) => {
       if (!theme) return;
+
+      setIsSystemSelected(theme === "system");
+
       setColorScheme(theme as Theme);
     });
   }, []);
@@ -50,6 +55,7 @@ export const ThemeContextProvider = ({
       <ThemeContext.Provider
         value={{
           currentTheme: colorScheme!,
+          isSystemSelected,
           toggleTheme: async (theme: Theme) => {
             setColorScheme(theme);
 

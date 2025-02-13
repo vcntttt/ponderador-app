@@ -1,24 +1,27 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { TouchableOpacity, View } from "react-native";
 import { ThemedView } from "@/components/ui/ThemedView";
 import { ThemedCard } from "@/components/ui/ThemedCard";
 import { ThemedText } from "@/components/ui/ThemedText";
 import { Ionicons } from "@expo/vector-icons";
 import { useThemeContext } from "../../../context/ThemeContext";
-import { ColorScheme } from "@/types";
+import { Theme } from "@/types";
 
-// todo: system option support
-const radioOptions: { label: string; value: ColorScheme; icon: any }[] = [
-  // { label: "Sistema", value: "system", icon: "contrast-outline" },
+const radioOptions: { label: string; value: Theme; icon: any }[] = [
+  { label: "Sistema", value: "system", icon: "contrast-outline" },
   { label: "Oscuro", value: "dark", icon: "moon-outline" },
   { label: "Claro", value: "light", icon: "sunny-outline" },
 ];
 
 export default function SettingsScreen() {
-  const { currentTheme, toggleTheme } = useThemeContext();
-  const [selectedOption, setSelectedOption] = useState(currentTheme);
+  const { currentTheme, isSystemSelected, toggleTheme } = useThemeContext();
+  const [selectedOption, setSelectedOption] = useState<Theme>(currentTheme);
 
-  const handleSelect = async (value: ColorScheme) => {
+  useEffect(() => {
+    isSystemSelected ? setSelectedOption("system") : setSelectedOption(currentTheme);
+  }, [currentTheme]);
+
+  const handleSelect = async (value: Theme) => {
     try {
       await toggleTheme(value);
       setSelectedOption(value);
