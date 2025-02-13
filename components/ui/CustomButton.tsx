@@ -7,6 +7,7 @@ interface Props extends PressableProps {
   onPress?: () => void;
   className?: string;
   type?: "primary" | "outline";
+  disabled?: boolean;
 }
 
 export const CustomButton = ({
@@ -14,6 +15,7 @@ export const CustomButton = ({
   onPress,
   className,
   type = "primary",
+  disabled = false,
   ...props
 }: Props) => {
   return (
@@ -22,6 +24,7 @@ export const CustomButton = ({
       className={clsx(`p-3 rounded-md w-full ${className}`, {
         "bg-light-primary dark:bg-dark-primary": type === "primary",
         "bg-white dark:!bg-black/50": type === "outline",
+        "opacity-50": disabled,
       })}
       {...props}
     >
@@ -29,6 +32,7 @@ export const CustomButton = ({
         className={clsx("text-center font-medium", {
           "!text-dark-text dark:text-dark-text": type === "primary",
           "text-light-text dark:text-dark-text": type === "outline",
+          "opacity-50": disabled,
         })}
       >
         {title}

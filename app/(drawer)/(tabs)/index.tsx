@@ -112,7 +112,7 @@ const App = () => {
   };
 
   return (
-    <ThemedView container safe className="flex-1">
+    <ThemedView container className="flex-1">
       <MyModal visible={modalVisible} onClose={closeModal}>
         <ThemedText type="subtitle" className="text-center mb-4 text-2xl">
           Dividir Nota
@@ -162,10 +162,21 @@ const App = () => {
         <CustomButton title="Guardar" onPress={handleApplySubNotes} />
       </MyModal>
 
-      <View className="flex-1 items-center mt-24 gap-4 w-full">
-        <ThemedText type="title" className="mb-10">
-          Calculadora
-        </ThemedText>
+      <View className={clsx("flex-1 items-center gap-4 w-full", {
+        "mt-32": 5 >= fields.length,
+        "mt-16": fields.length == 6,
+        "mt-2": fields.length >= 7,
+      })}>
+        {
+          fields.length < 9 && (
+            <ThemedText type="title" className={clsx({
+              "mb-10": fields.length <= 5,
+              "mb-2": fields.length > 5,
+            })}>
+              Calculadora
+            </ThemedText>
+          )
+        }
 
         {fields.map((field, index) => {
           const note = notasValues[index];
@@ -247,8 +258,13 @@ const App = () => {
         })}
 
         <CustomButton
-          title="Nueva Nota"
-          onPress={() => append({ value: "", percentage: "" })}
+          title={fields.length == 9 ? "No hay espacio" : "Nueva nota"}
+          onPress={() => {
+            if (fields.length < 9) {
+              append({ value: "", percentage: "" });
+            }
+          }}
+          disabled={fields.length == 9}
         />
       </View>
 
