@@ -175,7 +175,7 @@ const App = () => {
             note.subNotas.length > 0 &&
             note.subNotas[0].value !== "";
           return (
-            <View key={field.id} className="flex-row items-center gap-x-2 mb-4">
+            <View key={field.id} className="flex-row items-center gap-x-2">
               <Controller
                 control={control}
                 name={`notas.${index}.value`}
