@@ -162,21 +162,24 @@ const App = () => {
         <CustomButton title="Guardar" onPress={handleApplySubNotes} />
       </MyModal>
 
-      <View className={clsx("flex-1 items-center gap-4 w-full", {
-        "mt-32": 5 >= fields.length,
-        "mt-16": fields.length == 6,
-        "mt-2": fields.length >= 7,
-      })}>
-        {
-          fields.length < 9 && (
-            <ThemedText type="title" className={clsx({
+      <View
+        className={clsx("flex-1 items-center gap-4 w-full", {
+          "mt-32": 5 >= fields.length,
+          "mt-16": fields.length == 6,
+          "mt-2": fields.length >= 7,
+        })}
+      >
+        {fields.length < 9 && (
+          <ThemedText
+            type="title"
+            className={clsx({
               "mb-10": fields.length <= 5,
               "mb-2": fields.length > 5,
-            })}>
-              Calculadora
-            </ThemedText>
-          )
-        }
+            })}
+          >
+            Calculadora
+          </ThemedText>
+        )}
 
         {fields.map((field, index) => {
           const note = notasValues[index];
