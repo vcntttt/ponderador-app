@@ -7,6 +7,23 @@ import { ThemedText } from "@/components/ui/ThemedText";
 import ThemedTextInput from "@/components/ui/ThemedTextInput";
 import { CustomButton } from "@/components/ui/CustomButton";
 import { ThemedCard } from "@/components/ui/ThemedCard";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ESCALA_HISTORY_STORAGE_KEY } from "@/constants/storage";
+
+async function saveNewScale(scale: any) {
+  try {
+    const dataString = await AsyncStorage.getItem(ESCALA_HISTORY_STORAGE_KEY);
+    let lastScales = dataString ? JSON.parse(dataString) : [];
+
+    lastScales.unshift(scale);
+
+    lastScales = lastScales.slice(0, 3);
+
+    await AsyncStorage.setItem(ESCALA_HISTORY_STORAGE_KEY, JSON.stringify(lastScales));
+  } catch (error) {
+    console.log("Error guardando la escala:", error);
+  }
+}
 
 type FormData = {
   maxScore: string;
@@ -68,6 +85,15 @@ const EscalaNotasForm = () => {
     
     
     console.log("🚀 ~ onSubmit ~ scale:", scale)
+
+    saveNewScale({
+      scale,
+      requiredScore: requiredScore.toFixed(2),
+      passingGrade: passingGradeProvided.toFixed(2),
+      maxScoreNum,
+      increment: incrementNum,
+    });
+
     router.push({
       pathname: "/escala/results",
       params: {
@@ -81,7 +107,7 @@ const EscalaNotasForm = () => {
   };
 
   return (
-    <View className="flex-1 p-4">
+    <View>
       <View className="mb-5">
         <ThemedText className="mb-1">Puntaje total</ThemedText>
         <Controller
