@@ -1,9 +1,12 @@
+import React, { useState } from "react";
 import { View } from "react-native";
+import Slider from "@react-native-community/slider";
 import { router } from "expo-router";
 import { Controller, useForm } from "react-hook-form";
 import { ThemedText } from "@/components/ui/ThemedText";
 import ThemedTextInput from "@/components/ui/ThemedTextInput";
 import { CustomButton } from "@/components/ui/CustomButton";
+import { ThemedCard } from "../ui/ThemedCard";
 
 type FormData = {
   maxScore: string;
@@ -11,6 +14,7 @@ type FormData = {
   maxGrade: string;
   exigencia: string;
   passingScore: string;
+  increment: string;
 };
 
 const EscalaNotasForm = () => {
@@ -26,8 +30,10 @@ const EscalaNotasForm = () => {
       maxGrade: "7.0",
       exigencia: "60",
       passingScore: "4.0",
+      increment: "1",
     },
   });
+
 
   const onSubmit = (data: FormData) => {
     const maxScoreNum = parseFloat(data.maxScore);
@@ -36,10 +42,11 @@ const EscalaNotasForm = () => {
     const exigenciaPercent = parseFloat(data.exigencia) / 100;
     const requiredScore = exigenciaPercent * maxScoreNum;
     const passingGradeProvided = parseFloat(data.passingScore);
+    const incrementNum = parseFloat(data.increment);
 
     const scale: { score: number; grade: string; type: string }[] = [];
 
-    for (let score = 0; score <= maxScoreNum; score++) {
+    for (let score = 0; score <= maxScoreNum; score += incrementNum) {
       let calculatedGrade;
       if (score <= requiredScore) {
         calculatedGrade =
@@ -52,7 +59,7 @@ const EscalaNotasForm = () => {
             (maxScoreNum - requiredScore);
       }
       scale.push({
-        score,
+        score: parseFloat(score.toFixed(1)),
         grade: calculatedGrade.toFixed(1),
         type: score <= requiredScore ? "reprobado" : "aprobado",
       });
@@ -64,12 +71,14 @@ const EscalaNotasForm = () => {
         scale: JSON.stringify(scale),
         requiredScore: requiredScore.toFixed(2),
         passingGrade: passingGradeProvided.toFixed(2),
+        maxScoreNum,
+        increment: incrementNum,
       },
     });
   };
 
   return (
-    <View className="flex-1">
+    <View className="flex-1 p-4">
       <View className="mb-5">
         <ThemedText className="mb-1">Puntaje total</ThemedText>
         <Controller
@@ -237,8 +246,59 @@ const EscalaNotasForm = () => {
           )}
         </View>
       </View>
+      <View className="mb-5">
+        <ThemedText className="mb-1">
+          Incremento
+          {/* : {increment.toFixed(1)} */}
+        </ThemedText>
+        {/* <ThemedCard className="py-3 px-0"> */}
+          <Controller
+            control={control}
+            name="increment"
+            rules={{
+              required: "Este campo es requerido",
+              validate: (value) => {
+                const num = parseFloat(value);
+                if (isNaN(num)) return "Debe ser un número";
+                if (num < 0 || num > 1)
+                  return "El increment debe estar entre 0 y 1";
+                return true;
+              },
+            }}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <ThemedTextInput
+                placeholder="Incremento"
+                keyboardType="number-pad"
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+              />
+            )}
+          />
+          {errors.increment && (
+            <ThemedText className="!text-red-500 mt-1">
+              {errors.increment.message}
+            </ThemedText>
+          )}
+          
+          {/*
+           // todo: Rueditas de bici
+           <Slider
+            minimumValue={0.1}
+            maximumValue={1}
+            step={0.1}
+            value={increment}
+            onValueChange={(val) => setIncrement(val)}
+            minimumTrackTintColor="#1EB1FC"
+            maximumTrackTintColor="#1EB1FC"
+            thumbTintColor="#1EB1FC"
+          /> 
+          */}
+        {/* </ThemedCard> */}
+      </View>
       <CustomButton title="Calcular" onPress={handleSubmit(onSubmit)} />
     </View>
   );
 };
+
 export default EscalaNotasForm;
