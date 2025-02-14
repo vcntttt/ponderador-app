@@ -1,16 +1,16 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Platform, ScrollView, TouchableOpacity, View } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { FlatList, TouchableOpacity, View, Platform } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useLocalSearchParams, useNavigation } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
 import { ThemedView } from "@/components/ui/ThemedView";
 import { ThemedText } from "@/components/ui/ThemedText";
 import { ESCALA_SETTINGS_STORAGE_KEY } from "@/constants/storage";
 import clsx from "clsx";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface NotaEscala {
-  score: string | number;
-  grade: string | number;
+  score: number | string;
+  grade: number | string;
   type: "reprobado" | "aprobado";
 }
 
@@ -21,17 +21,38 @@ export default function ResultsScreen() {
   const options = Platform.OS === "web" ? 8 : 4;
   const columnOptions = Array.from({ length: options }, (_, i) => i + 1);
 
-  const { scale } = useLocalSearchParams<{ scale?: string }>();
-  const scaleData = scale ? JSON.parse(scale) : [];
+  const { scale, maxScoreNum, increment } = useLocalSearchParams<any>();
+  const scaleData: NotaEscala[] = scale ? JSON.parse(scale) : [];
+
+  const navigation = useNavigation();
+
+  const orderedData = useMemo(() => {
+    return ascending ? scaleData : [...scaleData].reverse();
+  }, [scaleData, ascending]);
+
+  const chunkedData = useMemo(() => {
+    const rows = [];
+    for (let i = 0; i < orderedData.length; i += numColumns) {
+      rows.push(orderedData.slice(i, i + numColumns));
+    }
+    return rows;
+  }, [orderedData, numColumns]);
+
+  useEffect(() => {
+    navigation.setOptions({
+      title: `Escala Generada: ${maxScoreNum} pts - ${increment !== "1" ? `+${increment}` : ""}`,
+    });
+  }, [scaleData]);
 
   useEffect(() => {
     async function fetchSettings() {
       const settings = await AsyncStorage.getItem(ESCALA_SETTINGS_STORAGE_KEY);
-      if (settings) {
-        const { numColumns, ascending } = JSON.parse(settings);
-        setNumColumns(numColumns);
-        setAscending(ascending);
-      }
+      if (!settings) return;
+
+      console.log("🚀 ~ fetchSettings ~ settings:", JSON.parse(settings));
+      const { numColumns, ascending } = JSON.parse(settings);
+      setNumColumns(numColumns);
+      setAscending(ascending);
     }
     fetchSettings();
   }, []);
@@ -40,37 +61,17 @@ export default function ResultsScreen() {
     setNumColumns(value);
     await AsyncStorage.setItem(
       ESCALA_SETTINGS_STORAGE_KEY,
-      JSON.stringify({ numColumns: value })
+      JSON.stringify({ numColumns: value, ascending })
     );
   }
 
   async function handleSortOrderChange() {
-    setAscending(!ascending);
+    setAscending((prev) => !prev);
     await AsyncStorage.setItem(
       ESCALA_SETTINGS_STORAGE_KEY,
-      JSON.stringify({ ascending })
+      JSON.stringify({ ascending: !ascending, numColumns })
     );
   }
-
-  const orderedData = useMemo(() => {
-    return ascending ? scaleData : [...scaleData].reverse();
-  }, [scaleData, ascending]);
-
-  const columnsData = useMemo(() => {
-    const perColumn = Math.ceil(orderedData.length / numColumns);
-    const subsets = [];
-    for (let i = 0; i < numColumns; i++) {
-      subsets.push(orderedData.slice(i * perColumn, (i + 1) * perColumn));
-    }
-    return subsets;
-  }, [orderedData, numColumns]);
-
-  const navigation = useNavigation();
-  useEffect(() => {
-    navigation.setOptions({
-      title: `Escala Generada: ${scaleData?.length - 1} pts`,
-    });
-  }, [scaleData]);
 
   return (
     <ThemedView className="flex-1">
@@ -83,15 +84,17 @@ export default function ResultsScreen() {
             Nota
           </ThemedText>
         </View>
+
         <TouchableOpacity
           onPress={() => setDropdownVisible((prev) => !prev)}
-          className="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded absolute right-12"
+          className="absolute right-12 top-0 px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded"
         >
           <ThemedText>{numColumns}</ThemedText>
         </TouchableOpacity>
+
         <TouchableOpacity
-          onPress={() => handleSortOrderChange()}
-          className="px-2 py-1 bg-gray-200 dark:bg-gray-700 rounded absolute right-0"
+          onPress={handleSortOrderChange}
+          className="absolute right-0 top-0 px-2 py-1 bg-gray-200 dark:bg-gray-700 rounded"
         >
           <ThemedText>
             {ascending ? (
@@ -101,6 +104,7 @@ export default function ResultsScreen() {
             )}
           </ThemedText>
         </TouchableOpacity>
+
         {dropdownVisible && (
           <View
             style={{ position: "absolute", right: 35, top: 45, zIndex: 100 }}
@@ -110,8 +114,8 @@ export default function ResultsScreen() {
               <TouchableOpacity
                 key={option}
                 onPress={() => {
-                  handleColumnsChange(option)
-                  setDropdownVisible(false)
+                  handleColumnsChange(option);
+                  setDropdownVisible(false);
                 }}
                 className="px-4 py-2"
               >
@@ -121,37 +125,53 @@ export default function ResultsScreen() {
           </View>
         )}
       </View>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <View className="flex-row justify-between">
-          {columnsData.map((subset, colIndex) => (
-            <View key={colIndex} className="flex-1 mx-1">
-              {subset.map((item: NotaEscala, rowIndex: number) => (
-                <View
-                  key={rowIndex}
-                  className={clsx("flex-row py-2 px-2", {
-                    "bg-white dark:bg-black/50": rowIndex % 2 === 0,
-                  })}
-                >
-                  <ThemedText type="subtitle" className="flex-1">
-                    {item.score}
-                  </ThemedText>
-                  <ThemedText
-                    type="subtitle"
-                    className={clsx("flex-1", {
-                      "!text-red-600 dark:!text-red-500":
-                        item.type === "reprobado",
-                      "!text-blue-600 dark:!text-blue-500":
-                        item.type === "aprobado",
-                    })}
-                  >
-                    {item.grade}
-                  </ThemedText>
-                </View>
+
+      <FlatList
+        className="flex-1 gap-x-2"
+        data={chunkedData}
+        keyExtractor={(_, rowIndex) => rowIndex.toString()}
+        showsVerticalScrollIndicator={false}
+        renderItem={({ item: row, index: rowIndex }) => {
+          const isStriped = rowIndex % 2 === 0;
+          return (
+            <View
+              className={clsx("flex-row px-2 gap-x-2", {
+                "bg-white dark:bg-black/50": isStriped,
+              })}
+            >
+              {row.map((colItem: NotaEscala, colIndex: number) => (
+                <>
+                  <View key={colIndex} className="flex-1 py-2 px-1">
+                    <View className="flex-row">
+                      <ThemedText type="subtitle" className="flex-1">
+                        {colItem.score}
+                      </ThemedText>
+                      <ThemedText
+                        type="subtitle"
+                        className={clsx("flex-1", {
+                          "!text-red-600 dark:!text-red-500":
+                            colItem.type === "reprobado",
+                          "!text-blue-600 dark:!text-blue-500":
+                            colItem.type === "aprobado",
+                        })}
+                      >
+                        {colItem.grade}
+                      </ThemedText>
+                    </View>
+                  </View>
+                  {colIndex < row.length - 1 && (
+                    <View className="w-2 bg-light-background dark:bg-dark-background h-full" />
+                  )}
+                </>
               ))}
+              {row.length < numColumns &&
+                Array.from({ length: numColumns - row.length }).map((_, i) => (
+                  <View key={`empty-${i}`} className="flex-1 py-2 px-1" />
+                ))}
             </View>
-          ))}
-        </View>
-      </ScrollView>
+          );
+        }}
+      />
     </ThemedView>
   );
 }
