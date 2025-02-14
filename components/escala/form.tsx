@@ -6,7 +6,7 @@ import { Controller, useForm } from "react-hook-form";
 import { ThemedText } from "@/components/ui/ThemedText";
 import ThemedTextInput from "@/components/ui/ThemedTextInput";
 import { CustomButton } from "@/components/ui/CustomButton";
-import { ThemedCard } from "../ui/ThemedCard";
+import { ThemedCard } from "@/components/ui/ThemedCard";
 
 type FormData = {
   maxScore: string;
@@ -34,7 +34,6 @@ const EscalaNotasForm = () => {
     },
   });
 
-
   const onSubmit = (data: FormData) => {
     const maxScoreNum = parseFloat(data.maxScore);
     const minGradeNum = parseFloat(data.minGrade);
@@ -45,8 +44,10 @@ const EscalaNotasForm = () => {
     const incrementNum = parseFloat(data.increment);
 
     const scale: { score: number; grade: string; type: string }[] = [];
+    const steps = Math.round(maxScoreNum / incrementNum);
 
-    for (let score = 0; score <= maxScoreNum; score += incrementNum) {
+    for (let i = 0; i <= steps; i++) {
+      const score = parseFloat((i * incrementNum).toFixed(1));
       let calculatedGrade;
       if (score <= requiredScore) {
         calculatedGrade =
@@ -59,12 +60,14 @@ const EscalaNotasForm = () => {
             (maxScoreNum - requiredScore);
       }
       scale.push({
-        score: parseFloat(score.toFixed(1)),
+        score,
         grade: calculatedGrade.toFixed(1),
         type: score <= requiredScore ? "reprobado" : "aprobado",
       });
     }
-
+    
+    
+    console.log("🚀 ~ onSubmit ~ scale:", scale)
     router.push({
       pathname: "/escala/results",
       params: {
@@ -252,36 +255,36 @@ const EscalaNotasForm = () => {
           {/* : {increment.toFixed(1)} */}
         </ThemedText>
         {/* <ThemedCard className="py-3 px-0"> */}
-          <Controller
-            control={control}
-            name="increment"
-            rules={{
-              required: "Este campo es requerido",
-              validate: (value) => {
-                const num = parseFloat(value);
-                if (isNaN(num)) return "Debe ser un número";
-                if (num < 0 || num > 1)
-                  return "El increment debe estar entre 0 y 1";
-                return true;
-              },
-            }}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <ThemedTextInput
-                placeholder="Incremento"
-                keyboardType="number-pad"
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-              />
-            )}
-          />
-          {errors.increment && (
-            <ThemedText className="!text-red-500 mt-1">
-              {errors.increment.message}
-            </ThemedText>
+        <Controller
+          control={control}
+          name="increment"
+          rules={{
+            required: "Este campo es requerido",
+            validate: (value) => {
+              const num = parseFloat(value);
+              if (isNaN(num)) return "Debe ser un número";
+              if (num < 0 || num > 1)
+                return "El increment debe estar entre 0 y 1";
+              return true;
+            },
+          }}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <ThemedTextInput
+              placeholder="Incremento"
+              keyboardType="number-pad"
+              onBlur={onBlur}
+              onChangeText={onChange}
+              value={value}
+            />
           )}
-          
-          {/*
+        />
+        {errors.increment && (
+          <ThemedText className="!text-red-500 mt-1">
+            {errors.increment.message}
+          </ThemedText>
+        )}
+
+        {/*
            // todo: Rueditas de bici
            <Slider
             minimumValue={0.1}
