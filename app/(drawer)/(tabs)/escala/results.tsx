@@ -15,8 +15,8 @@ interface NotaEscala {
 }
 
 export default function ResultsScreen() {
-  const [ascending, setAscending] = useState(true);
-  const [numColumns, setNumColumns] = useState(2);
+  const { numColumns, ascending, setNumColumns, toggleAscending } =
+    useResultSettingsStore();
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const options = Platform.OS === "web" ? 8 : 4;
   const columnOptions = Array.from({ length: options }, (_, i) => i + 1);
