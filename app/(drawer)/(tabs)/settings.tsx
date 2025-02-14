@@ -6,6 +6,7 @@ import { ThemedText } from "@/components/ui/ThemedText";
 import { Ionicons } from "@expo/vector-icons";
 import { useThemeContext } from "../../../context/ThemeContext";
 import { Theme } from "@/types";
+import { ThemedSwitch } from "../../../components/ui/ThemedSwitch";
 
 const radioOptions: { label: string; value: Theme; icon: any }[] = [
   { label: "Sistema", value: "system", icon: "contrast-outline" },
@@ -16,9 +17,12 @@ const radioOptions: { label: string; value: Theme; icon: any }[] = [
 export default function SettingsScreen() {
   const { currentTheme, isSystemSelected, toggleTheme } = useThemeContext();
   const [selectedOption, setSelectedOption] = useState<Theme>(currentTheme);
+  // const [isRueditasOn, setIsRueditasOn] = useState(false);
 
   useEffect(() => {
-    isSystemSelected ? setSelectedOption("system") : setSelectedOption(currentTheme);
+    isSystemSelected
+      ? setSelectedOption("system")
+      : setSelectedOption(currentTheme);
   }, [currentTheme]);
 
   const handleSelect = async (value: Theme) => {
@@ -34,32 +38,50 @@ export default function SettingsScreen() {
     <ThemedView className="gap-y-4 p-4">
       <ThemedText type="subtitle">Tema</ThemedText>
       <ThemedCard className="gap-y-4 p-4">
-        {radioOptions.map((option) => (
-          <TouchableOpacity
-            key={option.value}
-            onPress={() => handleSelect(option.value)}
-            className="flex-row items-center justify-between py-2"
-          >
-            <View className="flex-row gap-x-4">
-              <Ionicons
-                name={option.icon}
-                size={24}
-                color={selectedOption === option.value ? "purple" : "gray"}
-              />
-              <ThemedText
-                className={selectedOption === option.value ? "font-bold" : ""}
-              >
-                {option.label}
-              </ThemedText>
-            </View>
-            <View className="w-5 h-5 rounded-full border border-gray-400 items-center justify-center">
-              {selectedOption === option.value && (
-                <View className="w-3 h-3 rounded-full bg-light-primary dark:bg-dark-primary" />
-              )}
-            </View>
-          </TouchableOpacity>
+        {radioOptions.map((option, index) => (
+          <View key={option.value}>
+            <TouchableOpacity
+              onPress={() => handleSelect(option.value)}
+              className="flex-row items-center justify-between py-2"
+            >
+              <View className="flex-row gap-x-4">
+                <Ionicons
+                  name={option.icon}
+                  size={24}
+                  color={
+                    selectedOption === option.value
+                      ? currentTheme === "light"
+                        ? "black"
+                        : "white"
+                      : "gray"
+                  }
+                />
+                <ThemedText
+                  className={selectedOption === option.value ? "font-bold" : ""}
+                >
+                  {option.label}
+                </ThemedText>
+              </View>
+              <View className="w-5 h-5 rounded-full border border-gray-400 items-center justify-center">
+                {selectedOption === option.value && (
+                  <View className="w-3 h-3 rounded-full bg-light-primary dark:bg-dark-primary" />
+                )}
+              </View>
+            </TouchableOpacity>
+            {index !== radioOptions.length - 1 && (
+              <View className="h-px bg-gray-300 my-2" />
+            )}
+          </View>
         ))}
       </ThemedCard>
+      {/* <ThemedText type="subtitle">Interfaz</ThemedText>
+      <ThemedCard>
+        <ThemedSwitch
+          text="Protocolo rueditas de bici"
+          value={isRueditasOn}
+          onValueChange={() => setIsRueditasOn(!isRueditasOn)}
+        />
+      </ThemedCard> */}
     </ThemedView>
   );
 }

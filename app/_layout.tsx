@@ -52,7 +52,7 @@ export default function RootLayout() {
         {/* <ThemeProvider value={theme}> */}
         <ThemeContextProvider>
           <Slot />
-          <StatusBar style={"dark"} />
+          <StatusBar style={"auto"} />
         </ThemeContextProvider>
         {/* </ThemeProvider> */}
       </GestureHandlerRootView>
