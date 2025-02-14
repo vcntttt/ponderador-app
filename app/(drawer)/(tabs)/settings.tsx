@@ -35,7 +35,7 @@ export default function SettingsScreen() {
   };
 
   return (
-    <ThemedView className="gap-y-4 p-4">
+    <ThemedView className="gap-y-4">
       <ThemedText type="subtitle">Tema</ThemedText>
       <ThemedCard className="gap-y-4 p-4">
         {radioOptions.map((option, index) => (
