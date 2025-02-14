@@ -10,16 +10,24 @@ import { ThemedCard } from "@/components/ui/ThemedCard";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ESCALA_HISTORY_STORAGE_KEY } from "@/constants/storage";
 
-async function saveNewScale(scale: any) {
+async function saveNewScale(newScale: any) {
   try {
     const dataString = await AsyncStorage.getItem(ESCALA_HISTORY_STORAGE_KEY);
     let lastScales = dataString ? JSON.parse(dataString) : [];
+    const newScaleString = JSON.stringify(newScale.scale);
+    const exists = lastScales.some(
+      (s: any) => JSON.stringify(s.scale) === newScaleString
+    );
 
-    lastScales.unshift(scale);
+    if (!exists) {
+      lastScales.unshift(newScale);
+    }
 
     lastScales = lastScales.slice(0, 3);
-
-    await AsyncStorage.setItem(ESCALA_HISTORY_STORAGE_KEY, JSON.stringify(lastScales));
+    await AsyncStorage.setItem(
+      ESCALA_HISTORY_STORAGE_KEY,
+      JSON.stringify(lastScales)
+    );
   } catch (error) {
     console.log("Error guardando la escala:", error);
   }
@@ -82,9 +90,8 @@ const EscalaNotasForm = () => {
         type: score <= requiredScore ? "reprobado" : "aprobado",
       });
     }
-    
-    
-    console.log("🚀 ~ onSubmit ~ scale:", scale)
+
+    console.log("🚀 ~ onSubmit ~ scale:", scale);
 
     saveNewScale({
       scale,

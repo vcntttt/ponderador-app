@@ -1,13 +1,14 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { View, TouchableOpacity } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useFocusEffect, useRouter } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import { ThemedText } from "@/components/ui/ThemedText";
 import { ESCALA_HISTORY_STORAGE_KEY } from "@/constants/storage";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function SavedScalesList() {
   const [scales, setScales] = useState<any[]>([]);
-  const router = useRouter();
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const loadScales = useCallback(async () => {
     try {
@@ -49,18 +50,32 @@ export default function SavedScalesList() {
 
   return (
     <View>
-      <ThemedText className="my-4">Últimas escalas generadas</ThemedText>
-      {scales.map((item, index) => (
-        <TouchableOpacity
-          key={index}
-          className="mb-2 p-3 bg-white dark:bg-black/50 rounded-xl"
-          onPress={() => handleNavigateTo(item)}
-        >
-          <ThemedText>
-            {item.maxScoreNum} puntos | Incremento: +1
+      <TouchableOpacity className="my-4 flex-row items-center" onPress={() => setIsExpanded(!isExpanded)}>
+          <ThemedText className="font-semibold flex-1">
+            Últimas escalas generadas (3)
           </ThemedText>
-        </TouchableOpacity>
-      ))}
+          <Ionicons
+            name={isExpanded ? "chevron-up" : "chevron-down"}
+            size={16}
+            color="white"
+          />
+      </TouchableOpacity>
+      {isExpanded &&
+        (scales.length ? (
+          scales.map((item, index) => (
+            <TouchableOpacity
+              key={index}
+              className="mb-2 p-3 bg-white dark:bg-black/50 rounded-xl"
+              onPress={() => handleNavigateTo(item)}
+            >
+              <ThemedText>
+                {item.maxScoreNum} puntos | Incremento: {item.increment}
+              </ThemedText>
+            </TouchableOpacity>
+          ))
+        ) : (
+          <ThemedText>No hay escalas guardadas todavía</ThemedText>
+        ))}
     </View>
   );
 }
