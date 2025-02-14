@@ -1,12 +1,11 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { FlatList, TouchableOpacity, View, Platform } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { ThemedView } from "@/components/ui/ThemedView";
 import { ThemedText } from "@/components/ui/ThemedText";
-import { ESCALA_SETTINGS_STORAGE_KEY } from "@/constants/storage";
 import clsx from "clsx";
+import { useResultSettingsStore } from "@/store/result-settings";
 
 interface NotaEscala {
   score: number | string;
@@ -18,6 +17,7 @@ export default function ResultsScreen() {
   const { numColumns, ascending, setNumColumns, toggleAscending } =
     useResultSettingsStore();
   const [dropdownVisible, setDropdownVisible] = useState(false);
+
   const options = Platform.OS === "web" ? 8 : 4;
   const columnOptions = Array.from({ length: options }, (_, i) => i + 1);
 
@@ -40,38 +40,11 @@ export default function ResultsScreen() {
 
   useEffect(() => {
     navigation.setOptions({
-      title: `Escala Generada: ${maxScoreNum} pts - ${increment !== "1" ? `+${increment}` : ""}`,
+      title: `Escala Generada: ${maxScoreNum} pts${
+        increment !== "1" ? ` | +${increment}` : ""
+      }`,
     });
   }, [scaleData]);
-
-  useEffect(() => {
-    async function fetchSettings() {
-      const settings = await AsyncStorage.getItem(ESCALA_SETTINGS_STORAGE_KEY);
-      if (!settings) return;
-
-      console.log("🚀 ~ fetchSettings ~ settings:", JSON.parse(settings));
-      const { numColumns, ascending } = JSON.parse(settings);
-      setNumColumns(numColumns);
-      setAscending(ascending);
-    }
-    fetchSettings();
-  }, []);
-
-  async function handleColumnsChange(value: number) {
-    setNumColumns(value);
-    await AsyncStorage.setItem(
-      ESCALA_SETTINGS_STORAGE_KEY,
-      JSON.stringify({ numColumns: value, ascending })
-    );
-  }
-
-  async function handleSortOrderChange() {
-    setAscending((prev) => !prev);
-    await AsyncStorage.setItem(
-      ESCALA_SETTINGS_STORAGE_KEY,
-      JSON.stringify({ ascending: !ascending, numColumns })
-    );
-  }
 
   return (
     <ThemedView className="flex-1">
@@ -93,7 +66,7 @@ export default function ResultsScreen() {
         </TouchableOpacity>
 
         <TouchableOpacity
-          onPress={handleSortOrderChange}
+          onPress={toggleAscending}
           className="absolute right-0 top-0 px-2 py-1 bg-gray-200 dark:bg-gray-700 rounded"
         >
           <ThemedText>
@@ -114,7 +87,7 @@ export default function ResultsScreen() {
               <TouchableOpacity
                 key={option}
                 onPress={() => {
-                  handleColumnsChange(option);
+                  setNumColumns(option);
                   setDropdownVisible(false);
                 }}
                 className="px-4 py-2"
@@ -135,25 +108,50 @@ export default function ResultsScreen() {
           const isStriped = rowIndex % 2 === 0;
           return (
             <View
-              className={clsx("flex-row px-2 gap-x-2", {
+              className={clsx("flex-row gap-x-2 px-2", {
                 "bg-white dark:bg-black/50": isStriped,
               })}
             >
               {row.map((colItem: NotaEscala, colIndex: number) => (
-                <>
-                  <View key={colIndex} className="flex-1 py-2 px-1">
-                    <View className="flex-row">
-                      <ThemedText type="subtitle" className="flex-1">
+                <React.Fragment key={`cell-${rowIndex}-${colIndex}`}>
+                  <View
+                    className={clsx("flex-1 py-2", {
+                      "px-1": numColumns >= 1,
+                      "px-2": numColumns === 3,
+                      "px-3": numColumns === 4,
+                    })}
+                  >
+                    <View
+                      className={clsx("flex-row items-center", {
+                        "flex-1": numColumns == 1,
+                        // "justify-between": 1 > numColumns,
+                      })}
+                    >
+                      <ThemedText
+                        type="subtitle"
+                        className={clsx("flex-1", {
+                          "text-xs": numColumns === 3,
+                          "text-sm": numColumns === 4,
+                        })}
+                      >
                         {colItem.score}
                       </ThemedText>
                       <ThemedText
                         type="subtitle"
-                        className={clsx("flex-1", {
-                          "!text-red-600 dark:!text-red-500":
-                            colItem.type === "reprobado",
-                          "!text-blue-600 dark:!text-blue-500":
-                            colItem.type === "aprobado",
-                        })}
+                        className={clsx(
+                          "flex-1",
+                          {
+                            "text-right": numColumns > 1,
+                            "text-xs": numColumns === 3,
+                            "text-sm": numColumns === 4,
+                          },
+                          {
+                            "!text-red-600 dark:!text-red-500":
+                              colItem.type === "reprobado",
+                            "!text-blue-600 dark:!text-blue-500":
+                              colItem.type === "aprobado",
+                          }
+                        )}
                       >
                         {colItem.grade}
                       </ThemedText>
@@ -162,11 +160,14 @@ export default function ResultsScreen() {
                   {colIndex < row.length - 1 && (
                     <View className="w-2 bg-light-background dark:bg-dark-background h-full" />
                   )}
-                </>
+                </React.Fragment>
               ))}
               {row.length < numColumns &&
                 Array.from({ length: numColumns - row.length }).map((_, i) => (
-                  <View key={`empty-${i}`} className="flex-1 py-2 px-1" />
+                  <View
+                    key={`empty-${rowIndex}-${i}`}
+                    className="flex-1 py-2 px-1"
+                  />
                 ))}
             </View>
           );
