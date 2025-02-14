@@ -2,7 +2,7 @@
   "expo": {
     "name": "Ponderador",
     "slug": "ponderador",
-    "version": "0.5.5",
+    "version": "0.6.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
@@ -16,7 +16,11 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.vriveradev.ponderador"
+      "package": "com.vriveradev.ponderador",
+      "navigationBar": {
+        "backgroundColor": "#000000",
+        "barStyle": "light-content"
+      }
     },
     "web": {
       "bundler": "metro",
