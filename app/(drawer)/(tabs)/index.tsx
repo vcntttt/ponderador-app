@@ -118,7 +118,7 @@ const App = () => {
           Dividir Nota
         </ThemedText>
         <ThemedText type="label">Resultado</ThemedText>
-        <ThemedCard className="flex-row justify-between items-center p-3">
+        <ThemedCard className="flex-row justify-between items-center p-3 bg-zinc-200">
           <ThemedText className="">{partialResult.toFixed(2)}</ThemedText>
           <ThemedText className="!text-gray-500">
             {partialPercentage.toFixed(0)}%
@@ -164,12 +164,13 @@ const App = () => {
 
       <View
         className={clsx("flex-1 items-center gap-4 w-full", {
-          "mt-32": 5 >= fields.length,
+          "mt-32": 4 >= fields.length,
+          "mt-24": fields.length == 5,
           "mt-16": fields.length == 6,
           "mt-2": fields.length >= 7,
         })}
       >
-        {fields.length < 9 && (
+        {fields.length < 8 && (
           <ThemedText
             type="title"
             className={clsx({
@@ -261,13 +262,16 @@ const App = () => {
         })}
 
         <CustomButton
-          title={fields.length == 9 ? "No hay espacio" : "Nueva nota"}
+          title={fields.length == 8 ? "No hay espacio" : "Nueva nota"}
           onPress={() => {
-            if (fields.length < 9) {
+            if (fields.length < 8) {
               append({ value: "", percentage: "" });
             }
           }}
-          disabled={fields.length == 9}
+          disabled={fields.length == 8}
+        />
+        <CustomButton
+          title="Agregar examen"
         />
       </View>
 

@@ -35,13 +35,14 @@ export default function TabLayout() {
           shadowOpacity: 0, // ios
           borderBottomWidth: 0, // por si acaso
         },
-        tabBarActiveTintColor: text,
         headerShown: true,
+        tabBarActiveTintColor: text,
         tabBarShowLabel: false,
         tabBarButton: HapticTab,
         tabBarBackground: TabBarBackground,
         tabBarStyle: {
           backgroundColor,
+          elevation: 0,
           ...(Platform.OS === "ios" && { position: "absolute" }),
         },
       }}
