@@ -130,7 +130,7 @@ export default function ResultsScreen() {
                       <ThemedText
                         type="subtitle"
                         className={clsx("flex-1", {
-                          "text-xs": numColumns === 3,
+                          "text-base": numColumns === 3,
                           "text-sm": numColumns === 4,
                         })}
                       >
@@ -142,7 +142,7 @@ export default function ResultsScreen() {
                           "flex-1",
                           {
                             "text-right": numColumns > 1,
-                            "text-xs": numColumns === 3,
+                            "text-base": numColumns === 3,
                             "text-sm": numColumns === 4,
                           },
                           {
@@ -158,7 +158,7 @@ export default function ResultsScreen() {
                     </View>
                   </View>
                   {colIndex < row.length - 1 && (
-                    <View className="w-2 bg-light-background dark:bg-dark-background h-full" />
+                    <View className="w-3 bg-light-background dark:bg-dark-background h-full" />
                   )}
                 </React.Fragment>
               ))}
