@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from 'expo-zustand-persist';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ESCALA_SETTINGS_STORAGE_KEY } from "@/constants/storage";
 
 type Store = {
   numColumns: number;
@@ -18,7 +19,7 @@ export const useResultSettingsStore = create<Store>()(
       toggleAscending: () => set((state) => ({ ascending: !state.ascending })),
     }),
     {
-      name: "result-settings",
+      name: ESCALA_SETTINGS_STORAGE_KEY,
       storage: createJSONStorage(() => AsyncStorage),
     }
   )
