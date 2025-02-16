@@ -11,14 +11,26 @@ import { Link } from "expo-router";
 
 const CustomDrawer = (props: DrawerContentComponentProps) => {
   return (
-    <DrawerContentScrollView {...props} scrollEnabled={false} contentContainerStyle={{flex: 1}}>
+    <DrawerContentScrollView
+      {...props}
+      scrollEnabled={false}
+      contentContainerStyle={{ flex: 1 }}
+    >
       <ThemedView className="flex flex-col gap-y-4 justify-between h-full">
         <View>
           <ThemedText type="title">{APP_NAME}</ThemedText>
         </View>
-        <ThemedText>
-          Desarrollado por <Link className="underline italic" href="https://vrivera.is-a.dev">Vicente Rivera.</Link>
-        </ThemedText>
+        <View>
+          {/* <Link href={"/changelog"}>
+            <ThemedText>Changelog</ThemedText>
+          </Link> */}
+          <ThemedText>
+            Desarrollado por{" "}
+            <Link className="underline italic" href="https://vrivera.is-a.dev">
+              Vicente Rivera.
+            </Link>
+          </ThemedText>
+        </View>
       </ThemedView>
       {/* <DrawerItemList {...props} /> */}
     </DrawerContentScrollView>

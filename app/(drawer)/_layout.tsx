@@ -28,13 +28,13 @@ export default function DrawerLayout() {
           title: "",
         }}
       />
-      {/* <Drawer.Screen
-        name="settings"
+      <Drawer.Screen
+        name="changelog"
         options={{
-          drawerLabel: "Configuración",
-          title: "Configuración",
+          drawerLabel: "Changelog",
+          title: "Changelog",
         }}
-      /> */}
+      />
     </Drawer>
   );
 }
