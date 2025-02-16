@@ -69,7 +69,7 @@ export default function SettingsScreen() {
               </View>
             </TouchableOpacity>
             {index !== radioOptions.length - 1 && (
-              <View className="h-px bg-gray-300 my-2" />
+              <View className="h-px bg-gray-400 my-4" />
             )}
           </View>
         ))}

@@ -1,5 +1,5 @@
 import { Stack } from "expo-router/stack";
-import { useThemeColor } from "@/hooks/useThemeColor";
+import { useThemeColor } from "@/hooks/theme/useThemeColor";
 import { Ionicons } from "@expo/vector-icons";
 import { router, useNavigation } from "expo-router";
 import { DrawerActions } from "@react-navigation/native";

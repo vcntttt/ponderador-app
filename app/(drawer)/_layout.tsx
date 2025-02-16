@@ -1,5 +1,5 @@
 import { Drawer } from "expo-router/drawer";
-import { useThemeColor } from "@/hooks/useThemeColor";
+import { useThemeColor } from "@/hooks/theme/useThemeColor";
 import DrawerContent from "@/components/drawer";
 
 export default function DrawerLayout() {

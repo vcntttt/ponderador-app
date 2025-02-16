@@ -4,7 +4,7 @@ import { Tabs, useNavigation } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import TabBarBackground from "@/components/ui/TabBarBackground";
 import { HapticTab } from "@/components/HapticTab";
-import { useThemeColor } from "@/hooks/useThemeColor";
+import { useThemeColor } from "@/hooks/theme/useThemeColor";
 import { DrawerActions } from "@react-navigation/native";
 
 export default function TabLayout() {

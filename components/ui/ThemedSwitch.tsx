@@ -1,7 +1,7 @@
 import { View, Pressable, Platform } from "react-native";
 import { Switch } from "react-native-gesture-handler";
 import { ThemedText } from "./ThemedText";
-import { useThemeColor } from "@/hooks/useThemeColor";
+import { useThemeColor } from "@/hooks/theme/useThemeColor";
 
 interface Props {
   text?: string;
