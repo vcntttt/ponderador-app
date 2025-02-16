@@ -25,6 +25,11 @@ const App = () => {
     { value: "", percentage: "" },
   ]);
 
+  const [exam, setExam] = useState<{
+    value: string;
+    percentage: string;
+  } | null>(null);
+
   const {
     control,
     watch,
@@ -100,6 +105,12 @@ const App = () => {
     }
     setModalVisible(false);
   };
+
+  const examValue = exam ? parseFloat(exam.value) || 0 : 0;
+  const examPercentage = exam ? parseFloat(exam.percentage) || 0 : 0;
+  const finalResult = exam
+    ? (resultado * (100 - examPercentage) + examValue * examPercentage) / 100
+    : resultado;
 
   return (
     <ThemedView container className="flex-1">
@@ -262,11 +273,62 @@ const App = () => {
         />
         <CustomButton
           title="Agregar examen"
+          onPress={() => {
+            if (!exam) {
+              setExam({ value: "", percentage: "30" });
+            }
+          }}
+          disabled={!!exam}
         />
+
+        {exam && (
+          <View className="flex-row items-center gap-x-2 mt-4">
+            <View className="flex-1">
+              <ThemedText type="label">Examen</ThemedText>
+              <ThemedTextInput
+                placeholder="Nota Examen"
+                keyboardType="number-pad"
+                value={exam.value}
+                onChangeText={(text) =>
+                  setExam((prev) => (prev ? { ...prev, value: text } : prev))
+                }
+              />
+            </View>
+            <View className="w-1/4">
+              <ThemedText type="label">%</ThemedText>
+              <ThemedTextInput
+                placeholder="%"
+                keyboardType="number-pad"
+                value={exam.percentage}
+                onChangeText={(text) =>
+                  setExam((prev) =>
+                    prev ? { ...prev, percentage: text } : prev
+                  )
+                }
+              />
+            </View>
+            <TouchableOpacity
+              onPress={() => setExam(null)}
+              className="p-2 rounded-xl bg-red-700 ml-2"
+            >
+              <Ionicons name="trash-outline" size={24} color="white" />
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
 
-      <ThemedCard className="absolute bottom-4 mx-4 flex-row justify-between items-center">
-        <ThemedText> {resultado.toFixed(2)}</ThemedText>
+      {exam && (
+        <ThemedText className="absolute bottom-16">
+          Notas: {100 - examPercentage}% - Examen: {examPercentage}%
+        </ThemedText>
+      )}
+      <View className="absolute bottom-4 flex-row items-center">
+        <ThemedCard className="flex-1 flex-row items-center justify-between">
+          <ThemedText>
+            {exam
+              ? `${finalResult.toFixed(2)} (con examen)`
+              : resultado.toFixed(2)}
+          </ThemedText>
         <ThemedText className="!text-gray-500">
           {porcentaje.toFixed(0)}%
         </ThemedText>
