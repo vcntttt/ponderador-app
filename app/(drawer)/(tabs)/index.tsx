@@ -1,173 +1,60 @@
-import React, { useState } from "react";
-import { TouchableOpacity, View } from "react-native";
-import { Controller, useForm, useFieldArray } from "react-hook-form";
+import React from "react";
+import { TouchableOpacity, View, Pressable } from "react-native";
+import { Controller } from "react-hook-form";
 import { Ionicons } from "@expo/vector-icons";
+import clsx from "clsx";
 import { ThemedView } from "@/components/ui/ThemedView";
 import { ThemedText } from "@/components/ui/ThemedText";
 import ThemedTextInput from "@/components/ui/ThemedTextInput";
 import { CustomButton } from "@/components/ui/CustomButton";
-import MyModal from "@/components/modal";
-import clsx from "clsx";
 import { ThemedCard } from "@/components/ui/ThemedCard";
-import { NotaData, SubNota } from "@/types/notas";
-
-type FormData = {
-  notas: NotaData[];
-};
+import SubNotasModal from "@/components/calculadora/SubNotasModal";
+import { useCalculadoraNotas } from "@/hooks/useCalculadora";
 
 const App = () => {
-  const [modalVisible, setModalVisible] = useState(false);
-  const [selectedNoteIndex, setSelectedNoteIndex] = useState<number | null>(
-    null
-  );
-  const [subNotes, setSubNotes] = useState<SubNota[]>([
-    { value: "", percentage: "" },
-    { value: "", percentage: "" },
-  ]);
-
-  const [exam, setExam] = useState<{
-    value: string;
-    percentage: string;
-  } | null>(null);
-
   const {
     control,
-    watch,
-    setValue,
-    formState: { errors },
-  } = useForm<FormData>({
-    defaultValues: {
-      notas: [
-        { value: "", percentage: "" },
-        { value: "", percentage: "" },
-      ],
-    },
-  });
-
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: "notas",
-  });
-
-  const notasValues = watch("notas");
-
-  const resultado = notasValues.reduce((acc, nota) => {
-    const val = parseFloat(nota.value) || 0;
-    const perc = parseFloat(nota.percentage) || 0;
-    return acc + val * (perc / 100);
-  }, 0);
-
-  const porcentaje = notasValues.reduce((acc, nota) => {
-    const perc = parseFloat(nota.percentage) || 0;
-    return acc + perc;
-  }, 0);
-
-  const partialResult = subNotes.reduce((acc, sub) => {
-    const val = parseFloat(sub.value) || 0;
-    const perc = parseFloat(sub.percentage) || 0;
-    return acc + val * (perc / 100);
-  }, 0);
-  const partialPercentage = subNotes.reduce((acc, sub) => {
-    return acc + (parseFloat(sub.percentage) || 0);
-  }, 0);
-
-  const closeModal = () => setModalVisible(false);
-
-  const handleSubNoteChange = (
-    index: number,
-    field: "value" | "percentage",
-    text: string
-  ) => {
-    setSubNotes((prev) => {
-      const newSubNotes = [...prev];
-      newSubNotes[index] = { ...newSubNotes[index], [field]: text };
-      return newSubNotes;
-    });
-  };
-
-  const addSubNote = () => {
-    setSubNotes((prev) => [...prev, { value: "", percentage: "" }]);
-  };
-
-  const removeSubNote = (index: number) => {
-    setSubNotes((prev) => prev.filter((_, i) => i !== index));
-  };
-
-  const handleApplySubNotes = () => {
-    const weightedAverage = subNotes.reduce((acc, sub) => {
-      const val = parseFloat(sub.value) || 0;
-      const perc = parseFloat(sub.percentage) || 0;
-      return acc + val * (perc / 100);
-    }, 0);
-    if (selectedNoteIndex !== null) {
-      setValue(`notas.${selectedNoteIndex}.value`, weightedAverage.toFixed(1));
-      setValue(`notas.${selectedNoteIndex}.subNotas`, subNotes);
-    }
-    setModalVisible(false);
-  };
-
-  const examValue = exam ? parseFloat(exam.value) || 0 : 0;
-  const examPercentage = exam ? parseFloat(exam.percentage) || 0 : 0;
-  const finalResult = exam
-    ? (resultado * (100 - examPercentage) + examValue * examPercentage) / 100
-    : resultado;
+    errors,
+    fields,
+    append,
+    remove,
+    modalVisible,
+    setModalVisible,
+    openSubNotasModal,
+    subNotes,
+    handleSubNoteChange,
+    addSubNote,
+    removeSubNote,
+    handleApplySubNotes,
+    exam,
+    setExam,
+    resultado,
+    porcentaje,
+    partialResult,
+    partialPercentage,
+    finalResult,
+    notasValues,
+  } = useCalculadoraNotas();
 
   return (
     <ThemedView container className="flex-1">
-      <MyModal visible={modalVisible} onClose={closeModal}>
-        <ThemedText type="subtitle" className="text-center mb-4 text-2xl">
-          Dividir Nota
-        </ThemedText>
-        <ThemedText type="label">Resultado</ThemedText>
-        <ThemedCard className="flex-row justify-between items-center p-3 bg-zinc-200">
-          <ThemedText className="">{partialResult.toFixed(2)}</ThemedText>
-          <ThemedText className="!text-gray-500">
-            {partialPercentage.toFixed(0)}%
-          </ThemedText>
-        </ThemedCard>
-        <ThemedText type="label">SubNotas</ThemedText>
-        {subNotes.map((subNote, index) => (
-          <View key={index} className="flex-row items-center gap-x-2 mb-2">
-            <ThemedTextInput
-              className="flex-1 bg-zinc-200"
-              placeholder="Nota"
-              keyboardType="number-pad"
-              value={subNote.value}
-              onChangeText={(text) => handleSubNoteChange(index, "value", text)}
-            />
-            <ThemedTextInput
-              className="w-1/4 bg-zinc-200"
-              placeholder="%"
-              keyboardType="number-pad"
-              value={subNote.percentage}
-              onChangeText={(text) =>
-                handleSubNoteChange(index, "percentage", text)
-              }
-            />
-            {index > 1 && (
-              <TouchableOpacity
-                onPress={() => removeSubNote(index)}
-                className="p-2 rounded-xl bg-red-700 ml-2"
-              >
-                <Ionicons name="trash-outline" size={24} color="white" />
-              </TouchableOpacity>
-            )}
-          </View>
-        ))}
-        <CustomButton
-          type="outline"
-          title="Agregar Nota"
-          onPress={addSubNote}
-          className="!bg-zinc-200"
-        />
-        <CustomButton title="Guardar" onPress={handleApplySubNotes} />
-      </MyModal>
+      <SubNotasModal
+        visible={modalVisible}
+        subNotes={subNotes}
+        onClose={() => setModalVisible(false)}
+        onChangeSubNote={handleSubNoteChange}
+        onAddSubNote={addSubNote}
+        onRemoveSubNote={removeSubNote}
+        onApplySubNotes={handleApplySubNotes}
+        partialResult={partialResult}
+        partialPercentage={partialPercentage}
+      />
 
       <View
         className={clsx("flex-1 items-center gap-4 w-full", {
           "mt-32": 4 >= fields.length,
-          "mt-24": fields.length == 5,
-          "mt-16": fields.length == 6,
+          "mt-24": fields.length === 5,
+          "mt-16": fields.length === 6,
           "mt-2": fields.length >= 7,
         })}
       >
@@ -223,19 +110,7 @@ const App = () => {
                 )}
               />
               <TouchableOpacity
-                onPress={() => {
-                  setSelectedNoteIndex(index);
-                  const noteSubNotas = note?.subNotas;
-                  if (noteSubNotas && noteSubNotas.length > 0) {
-                    setSubNotes(noteSubNotas);
-                  } else {
-                    setSubNotes([
-                      { value: "", percentage: "" },
-                      { value: "", percentage: "" },
-                    ]);
-                  }
-                  setModalVisible(true);
-                }}
+                onPress={() => openSubNotasModal(note?.subNotas, index)}
                 className={clsx("p-2 rounded-xl", {
                   "bg-light-primary dark:bg-dark-primary": isDivided,
                   "bg-white dark:bg-black/50": !isDivided,
@@ -263,14 +138,15 @@ const App = () => {
         })}
 
         <CustomButton
-          title={fields.length == 8 ? "No hay espacio" : "Nueva nota"}
+          title={fields.length === 8 ? "No hay espacio" : "Nueva nota"}
           onPress={() => {
             if (fields.length < 8) {
               append({ value: "", percentage: "" });
             }
           }}
-          disabled={fields.length == 8}
+          disabled={fields.length === 8}
         />
+
         <CustomButton
           title="Agregar examen"
           onPress={() => {
@@ -317,22 +193,41 @@ const App = () => {
         )}
       </View>
 
-      {exam && (
+      {/* {exam && (
         <ThemedText className="absolute bottom-16">
-          Notas: {100 - examPercentage}% - Examen: {examPercentage}%
+          Notas: {100 - (exam ? parseFloat(exam.percentage) || 0 : 0)}% -
+          Examen: {exam?.percentage}
         </ThemedText>
-      )}
+      )} */}
       <View className="absolute bottom-4 flex-row items-center">
-        <ThemedCard className="flex-1 flex-row items-center justify-between">
-          <ThemedText>
-            {exam
-              ? `${finalResult.toFixed(2)} (con examen)`
-              : resultado.toFixed(2)}
+        <ThemedCard className="flex-1 flex-row items-center justify-between px-4">
+          <ThemedText>{resultado.toFixed(2)}</ThemedText>
+          <ThemedText className="!text-gray-500">
+            {porcentaje.toFixed(0)}%
           </ThemedText>
-        <ThemedText className="!text-gray-500">
-          {porcentaje.toFixed(0)}%
-        </ThemedText>
-      </ThemedCard>
+        </ThemedCard>
+        <View className="flex-row ml-2 gap-x-2">
+          <Pressable
+            className="p-2 bg-dark-primary rounded-xl active:bg-dark-secondary transition-colors mx-0"
+            onPress={() => {
+              append({ value: "", percentage: "" });
+            }}
+          >
+            <Ionicons name="add-outline" size={20} color="white" />
+          </Pressable>
+          <Pressable
+            className="p-2 bg-dark-primary rounded-xl active:bg-dark-secondary transition-colors mx-0"
+            onPress={() => {
+              if (!exam) {
+                setExam({ value: "", percentage: "30" });
+              }
+            }}
+            disabled={!!exam}
+          >
+            <Ionicons name="school-outline" size={20} color="white" />
+          </Pressable>
+        </View>
+      </View>
       {errors.notas && (
         <ThemedText className="text-red-500 mt-1">
           {errors.notas.message}
