@@ -6,12 +6,7 @@ import { ThemedView } from "@/components/ui/ThemedView";
 import { ThemedText } from "@/components/ui/ThemedText";
 import clsx from "clsx";
 import { useResultSettingsStore } from "@/store/result-settings";
-
-interface NotaEscala {
-  score: number | string;
-  grade: number | string;
-  type: "reprobado" | "aprobado";
-}
+import { Escala } from "@/types/escala";
 
 export default function ResultsScreen() {
   const { numColumns, ascending, setNumColumns, toggleAscending } =
@@ -22,7 +17,7 @@ export default function ResultsScreen() {
   const columnOptions = Array.from({ length: options }, (_, i) => i + 1);
 
   const { scale, maxScoreNum, increment } = useLocalSearchParams<any>();
-  const scaleData: NotaEscala[] = scale ? JSON.parse(scale) : [];
+  const scaleData: Escala[] = scale ? JSON.parse(scale) : [];
 
   const navigation = useNavigation();
 
@@ -112,7 +107,7 @@ export default function ResultsScreen() {
                 "bg-white dark:bg-black/50": isStriped,
               })}
             >
-              {row.map((colItem: NotaEscala, colIndex: number) => (
+              {row.map((colItem: Escala, colIndex: number) => (
                 <React.Fragment key={`cell-${rowIndex}-${colIndex}`}>
                   <View
                     className={clsx("flex-1 py-2", {

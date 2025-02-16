@@ -4,9 +4,9 @@ import { ThemedView } from "@/components/ui/ThemedView";
 import { ThemedCard } from "@/components/ui/ThemedCard";
 import { ThemedText } from "@/components/ui/ThemedText";
 import { Ionicons } from "@expo/vector-icons";
-import { useThemeContext } from "../../../context/ThemeContext";
-import { Theme } from "@/types";
-import { ThemedSwitch } from "../../../components/ui/ThemedSwitch";
+import { useThemeContext } from "@/context/ThemeContext";
+import { Theme } from "@/types/theme";
+import { ThemedSwitch } from "@/components/ui/ThemedSwitch";
 
 const radioOptions: { label: string; value: Theme; icon: any }[] = [
   { label: "Sistema", value: "system", icon: "contrast-outline" },

@@ -9,8 +9,9 @@ import { CustomButton } from "@/components/ui/CustomButton";
 import { ThemedCard } from "@/components/ui/ThemedCard";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ESCALA_HISTORY_STORAGE_KEY } from "@/constants/storage";
+import { Escala, EscalaParams, SavedEscala } from '@/types/escala';
 
-async function saveNewScale(newScale: any) {
+async function saveNewScale(newScale: SavedEscala) {
   try {
     const dataString = await AsyncStorage.getItem(ESCALA_HISTORY_STORAGE_KEY);
     let lastScales = dataString ? JSON.parse(dataString) : [];
@@ -33,22 +34,13 @@ async function saveNewScale(newScale: any) {
   }
 }
 
-type FormData = {
-  maxScore: string;
-  minGrade: string;
-  maxGrade: string;
-  exigencia: string;
-  passingScore: string;
-  increment: string;
-};
-
 const EscalaNotasForm = () => {
   const {
     control,
     handleSubmit,
     formState: { errors },
     getValues,
-  } = useForm<FormData>({
+  } = useForm<EscalaParams>({
     defaultValues: {
       maxScore: "40",
       minGrade: "1.0",
@@ -59,7 +51,7 @@ const EscalaNotasForm = () => {
     },
   });
 
-  const onSubmit = (data: FormData) => {
+  const onSubmit = (data: EscalaParams) => {
     const maxScoreNum = parseFloat(data.maxScore);
     const minGradeNum = parseFloat(data.minGrade);
     const maxGradeNum = parseFloat(data.maxGrade);

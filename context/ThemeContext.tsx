@@ -8,7 +8,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useColorScheme } from "nativewind";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { THEME_STORAGE_KEY } from "@/constants/storage";
-import { ColorScheme, Theme } from "@/types";
+import { ColorScheme, Theme } from "@/types/theme";
 
 interface ThemeContextType {
   currentTheme: ColorScheme;

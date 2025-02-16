@@ -9,17 +9,7 @@ import { CustomButton } from "@/components/ui/CustomButton";
 import MyModal from "@/components/modal";
 import clsx from "clsx";
 import { ThemedCard } from "@/components/ui/ThemedCard";
-
-type SubNota = {
-  value: string;
-  percentage: string;
-};
-
-type NotaData = {
-  value: string;
-  percentage: string;
-  subNotas?: SubNota[];
-};
+import { NotaData, SubNota } from "@/types/notas";
 
 type FormData = {
   notas: NotaData[];
