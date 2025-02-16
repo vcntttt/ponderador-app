@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { TouchableOpacity, View, Pressable } from "react-native";
 import { Controller } from "react-hook-form";
 import { Ionicons } from "@expo/vector-icons";
@@ -10,6 +10,7 @@ import { CustomButton } from "@/components/ui/CustomButton";
 import { ThemedCard } from "@/components/ui/ThemedCard";
 import SubNotasModal from "@/components/calculadora/SubNotasModal";
 import { useCalculadoraNotas } from "@/hooks/useCalculadora";
+import { useNavigation } from "expo-router";
 
 const App = () => {
   const {
@@ -35,6 +36,14 @@ const App = () => {
     finalResult,
     notasValues,
   } = useCalculadoraNotas();
+
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerTitle: fields.length >= 8 ? "Calculadora" : "",
+    });
+  }, [fields.length]);
 
   return (
     <ThemedView container className="flex-1">
@@ -128,7 +137,7 @@ const App = () => {
               {index > 1 && (
                 <TouchableOpacity
                   onPress={() => remove(index)}
-                  className="p-2 rounded-xl bg-red-700 ml-2"
+                  className="p-2 rounded-xl bg-red-700"
                 >
                   <Ionicons name="trash-outline" size={24} color="white" />
                 </TouchableOpacity>
@@ -147,32 +156,34 @@ const App = () => {
           disabled={fields.length === 8}
         />
 
-        <CustomButton
-          title="Agregar examen"
-          onPress={() => {
-            if (!exam) {
-              setExam({ value: "", percentage: "30" });
-            }
-          }}
-          disabled={!!exam}
-        />
+        {!exam && (
+          <CustomButton
+            title="Agregar examen"
+            onPress={() => {
+              if (!exam) {
+                setExam({ value: "", percentage: "30" });
+              }
+            }}
+          />
+        )}
+      </View>
 
+      <View className="absolute bottom-4 w-full gap-y-2">
         {exam && (
-          <View className="flex-row items-center gap-x-2 mt-4">
-            <View className="flex-1">
-              <ThemedText type="label">Examen</ThemedText>
+          <View>
+            <ThemedText type="label">Examen</ThemedText>
+            <View className="flex-row items-center gap-x-2">
               <ThemedTextInput
-                placeholder="Nota Examen"
+                className="flex-1"
+                placeholder="Nota"
                 keyboardType="number-pad"
                 value={exam.value}
                 onChangeText={(text) =>
                   setExam((prev) => (prev ? { ...prev, value: text } : prev))
                 }
               />
-            </View>
-            <View className="w-1/4">
-              <ThemedText type="label">%</ThemedText>
               <ThemedTextInput
+                className="w-1/4"
                 placeholder="%"
                 keyboardType="number-pad"
                 value={exam.percentage}
@@ -182,31 +193,23 @@ const App = () => {
                   )
                 }
               />
+              <TouchableOpacity
+                onPress={() => setExam(null)}
+                className="p-2 rounded-xl bg-red-700"
+              >
+                <Ionicons name="trash-outline" size={24} color="white" />
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity
-              onPress={() => setExam(null)}
-              className="p-2 rounded-xl bg-red-700 ml-2"
-            >
-              <Ionicons name="trash-outline" size={24} color="white" />
-            </TouchableOpacity>
           </View>
         )}
-      </View>
-
-      {/* {exam && (
-        <ThemedText className="absolute bottom-16">
-          Notas: {100 - (exam ? parseFloat(exam.percentage) || 0 : 0)}% -
-          Examen: {exam?.percentage}
-        </ThemedText>
-      )} */}
-      <View className="absolute bottom-4 flex-row items-center">
-        <ThemedCard className="flex-1 flex-row items-center justify-between px-4">
-          <ThemedText>{resultado.toFixed(2)}</ThemedText>
-          <ThemedText className="!text-gray-500">
-            {porcentaje.toFixed(0)}%
-          </ThemedText>
-        </ThemedCard>
-        <View className="flex-row ml-2 gap-x-2">
+        <View className="flex-row items-center">
+          <ThemedCard className="flex-1 flex-row items-center justify-between px-4">
+            <ThemedText>{resultado.toFixed(2)}</ThemedText>
+            <ThemedText className="!text-gray-500">
+              {porcentaje.toFixed(0)}%
+            </ThemedText>
+          </ThemedCard>
+          {/* <View className="flex-row ml-2 gap-x-2">
           <Pressable
             className="p-2 bg-dark-primary rounded-xl active:bg-dark-secondary transition-colors mx-0"
             onPress={() => {
@@ -226,8 +229,10 @@ const App = () => {
           >
             <Ionicons name="school-outline" size={20} color="white" />
           </Pressable>
+        </View> */}
         </View>
       </View>
+
       {errors.notas && (
         <ThemedText className="text-red-500 mt-1">
           {errors.notas.message}
