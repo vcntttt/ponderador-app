@@ -29,11 +29,10 @@ const App = () => {
     handleApplySubNotes,
     exam,
     setExam,
-    resultado,
+    finalResult,
     porcentaje,
     partialResult,
     partialPercentage,
-    finalResult,
     notasValues,
   } = useCalculadoraNotas();
 
@@ -204,7 +203,7 @@ const App = () => {
         )}
         <View className="flex-row items-center">
           <ThemedCard className="flex-1 flex-row items-center justify-between px-4">
-            <ThemedText>{resultado.toFixed(2)}</ThemedText>
+            <ThemedText>{finalResult.toFixed(2)}</ThemedText>
             <ThemedText className="!text-gray-500">
               {porcentaje.toFixed(0)}%
             </ThemedText>
