@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import { View } from "react-native";
+import React, { useCallback, useState } from "react";
+import { Alert, View } from "react-native";
 import Slider from "@react-native-community/slider";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import { Controller, useForm } from "react-hook-form";
 import { ThemedText } from "@/components/ui/ThemedText";
 import ThemedTextInput from "@/components/ui/ThemedTextInput";
@@ -9,7 +9,8 @@ import { CustomButton } from "@/components/ui/CustomButton";
 import { ThemedCard } from "@/components/ui/ThemedCard";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ESCALA_HISTORY_STORAGE_KEY } from "@/constants/storage";
-import { Escala, EscalaParams, SavedEscala } from '@/types/escala';
+import { Escala, EscalaParams, SavedEscala } from "@/types/escala";
+import { Ionicons } from "@expo/vector-icons";
 
 async function saveNewScale(newScale: SavedEscala) {
   try {
@@ -51,7 +52,15 @@ const EscalaNotasForm = () => {
     },
   });
 
+  const [loading, setLoading] = useState(false);
+  useFocusEffect(
+    useCallback(() => {
+      setLoading(false);
+    }, [])
+  );
+
   const onSubmit = (data: EscalaParams) => {
+    setLoading(true);
     const maxScoreNum = parseFloat(data.maxScore);
     const minGradeNum = parseFloat(data.minGrade);
     const maxGradeNum = parseFloat(data.maxGrade);
@@ -84,24 +93,41 @@ const EscalaNotasForm = () => {
     }
 
     console.log("🚀 ~ onSubmit ~ scale:", scale);
-
-    saveNewScale({
-      scale,
+    const scaleParams = {
+      scale: JSON.stringify(scale),
       requiredScore: requiredScore.toFixed(2),
       passingGrade: passingGradeProvided.toFixed(2),
       maxScoreNum,
       increment: incrementNum,
+    };
+
+    saveNewScale({
+      ...scaleParams,
+      scale,
     });
+
+    if (scale.length > 1000) {
+      Alert.alert(
+        "Advertencia",
+        "Esta escala es muy grande y puede tardar en cargar. ¿Deseas continuar?",
+        [
+          { text: "Cancelar", style: "cancel" },
+          {
+            text: "Continuar",
+            onPress: () =>
+              router.push({
+                pathname: "/escala/results",
+                params: scaleParams,
+              }),
+          },
+        ]
+      );
+      return;
+    }
 
     router.push({
       pathname: "/escala/results",
-      params: {
-        scale: JSON.stringify(scale),
-        requiredScore: requiredScore.toFixed(2),
-        passingGrade: passingGradeProvided.toFixed(2),
-        maxScoreNum,
-        increment: incrementNum,
-      },
+      params: scaleParams,
     });
   };
 
@@ -324,7 +350,19 @@ const EscalaNotasForm = () => {
           */}
         {/* </ThemedCard> */}
       </View>
-      <CustomButton title="Calcular" onPress={handleSubmit(onSubmit)} />
+      <CustomButton
+        title={
+          loading
+            ? "Calculando..."
+            : // ( <View className="flex-row items-center gap-x-2">
+              //   <ThemedText>Calculando</ThemedText>
+              //   <Ionicons name="reload-outline" size={20} color="white" className="animate-spin" />
+              // </View>)
+              "Calcular"
+        }
+        onPress={handleSubmit(onSubmit)}
+        disabled={loading}
+      />
     </View>
   );
 };
