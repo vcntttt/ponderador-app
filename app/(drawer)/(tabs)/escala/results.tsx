@@ -1,5 +1,5 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { FlatList, TouchableOpacity, View, Platform } from "react-native";
+import React, { useEffect, useMemo } from "react";
+import { FlatList, TouchableOpacity, View } from "react-native";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { ThemedView } from "@/components/ui/ThemedView";
@@ -7,15 +7,11 @@ import { ThemedText } from "@/components/ui/ThemedText";
 import clsx from "clsx";
 import { useResultSettingsStore } from "@/store/result-settings";
 import { Escala } from "@/types/escala";
+import { ColumnsSelector } from "@/components/escala/columns-selector";
 
 export default function ResultsScreen() {
   const { numColumns, ascending, setNumColumns, toggleAscending } =
     useResultSettingsStore();
-  const [dropdownVisible, setDropdownVisible] = useState(false);
-
-  const options = Platform.OS === "web" ? 8 : 4;
-  const columnOptions = Array.from({ length: options }, (_, i) => i + 1);
-
   const { scale, maxScoreNum, increment } = useLocalSearchParams<any>();
   const scaleData: Escala[] = scale ? JSON.parse(scale) : [];
 
@@ -53,12 +49,7 @@ export default function ResultsScreen() {
           </ThemedText>
         </View>
 
-        <TouchableOpacity
-          onPress={() => setDropdownVisible((prev) => !prev)}
-          className="absolute right-12 top-0 px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded"
-        >
-          <ThemedText>{numColumns}</ThemedText>
-        </TouchableOpacity>
+        <ColumnsSelector />
 
         <TouchableOpacity
           onPress={toggleAscending}
@@ -72,26 +63,6 @@ export default function ResultsScreen() {
             )}
           </ThemedText>
         </TouchableOpacity>
-
-        {dropdownVisible && (
-          <View
-            style={{ position: "absolute", right: 35, top: 45, zIndex: 100 }}
-            className="bg-gray-200 dark:bg-gray-700 rounded"
-          >
-            {columnOptions.map((option) => (
-              <TouchableOpacity
-                key={option}
-                onPress={() => {
-                  setNumColumns(option);
-                  setDropdownVisible(false);
-                }}
-                className="px-4 py-2"
-              >
-                <ThemedText type="subtitle">{option}</ThemedText>
-              </TouchableOpacity>
-            ))}
-          </View>
-        )}
       </View>
 
       <FlatList
