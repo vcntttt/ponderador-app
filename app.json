@@ -2,7 +2,7 @@
   "expo": {
     "name": "Ponderador",
     "slug": "ponderador",
-    "version": "0.6.0",
+    "version": "0.11.3",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
@@ -41,7 +41,8 @@
             "backgroundColor": "#000000"
           }
         }
-      ]
+      ],
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true
