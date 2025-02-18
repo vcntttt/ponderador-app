@@ -37,7 +37,7 @@ export default function SettingsScreen() {
   return (
     <ThemedView className="gap-y-4">
       <ThemedText type="subtitle">Tema</ThemedText>
-      <ThemedCard className="gap-y-4 p-4">
+      <View className="gap-y-4 py-4">
         {radioOptions.map((option, index) => (
           <View key={option.value}>
             <TouchableOpacity
@@ -68,15 +68,13 @@ export default function SettingsScreen() {
                 )}
               </View>
             </TouchableOpacity>
-            {index !== radioOptions.length - 1 && (
-              <View className="h-px bg-gray-400 my-4" />
-            )}
           </View>
         ))}
-      </ThemedCard>
+      </View>
       {/* <ThemedText type="subtitle">Interfaz</ThemedText>
       <ThemedCard>
         <ThemedSwitch
+          textType="default"
           text="Protocolo rueditas de bici"
           value={isRueditasOn}
           onValueChange={() => setIsRueditasOn(!isRueditasOn)}

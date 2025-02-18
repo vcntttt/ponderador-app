@@ -71,7 +71,7 @@ export default function TabLayout() {
         options={{
           title: "Configuración",
           tabBarIcon: ({ color }) => (
-            <Ionicons name="settings-outline" color={color} size={24} />
+            <Ionicons name="settings" color={color} size={24} />
           ),
         }}
       />

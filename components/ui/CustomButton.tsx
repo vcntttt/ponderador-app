@@ -3,7 +3,7 @@ import { ThemedText } from "./ThemedText";
 import clsx from "clsx";
 
 interface Props extends PressableProps {
-  title: string;
+  title: string | React.ReactNode;
   onPress?: () => void;
   className?: string;
   type?: "primary" | "outline";
@@ -23,7 +23,8 @@ export const CustomButton = ({
       onPress={onPress}
       className={clsx(`p-3 rounded-md w-full ${className}`, {
         "bg-light-primary dark:bg-dark-primary": type === "primary",
-        "bg-white dark:!bg-black/50": type === "outline",
+        "bg-light-background dark:bg-dark-background border-[1px] border-black/30 dark:border-white/50":
+          type === "outline",
         "opacity-50": disabled,
       })}
       {...props}

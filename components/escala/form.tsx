@@ -1,16 +1,13 @@
 import React, { useCallback, useState } from "react";
 import { Alert, View } from "react-native";
-import Slider from "@react-native-community/slider";
 import { router, useFocusEffect } from "expo-router";
 import { Controller, useForm } from "react-hook-form";
 import { ThemedText } from "@/components/ui/ThemedText";
 import ThemedTextInput from "@/components/ui/ThemedTextInput";
 import { CustomButton } from "@/components/ui/CustomButton";
-import { ThemedCard } from "@/components/ui/ThemedCard";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ESCALA_HISTORY_STORAGE_KEY } from "@/constants/storage";
-import { Escala, EscalaParams, SavedEscala } from "@/types/escala";
-import { Ionicons } from "@expo/vector-icons";
+import { EscalaParams, SavedEscala } from "@/types/escala";
 
 async function saveNewScale(newScale: SavedEscala) {
   try {
@@ -133,7 +130,7 @@ const EscalaNotasForm = () => {
 
   return (
     <View>
-      <View className="mb-5">
+      <View className="mb-3">
         <ThemedText className="mb-1">Puntaje total</ThemedText>
         <Controller
           control={control}
@@ -160,7 +157,7 @@ const EscalaNotasForm = () => {
           </ThemedText>
         )}
       </View>
-      <View className="flex-row justify-between mb-5">
+      <View className="flex-row justify-between mb-3">
         <View className="flex-1 mr-2">
           <ThemedText className="mb-1">Nota mínima</ThemedText>
           <Controller
@@ -232,7 +229,7 @@ const EscalaNotasForm = () => {
           )}
         </View>
       </View>
-      <View className="flex-row justify-between mb-5">
+      <View className="flex-row justify-between mb-3">
         <View className="flex-1 mr-2">
           <ThemedText className="mb-1">Nota Aprobatoria</ThemedText>
           <Controller
@@ -300,7 +297,7 @@ const EscalaNotasForm = () => {
           )}
         </View>
       </View>
-      <View className="mb-5">
+      <View className="mb-3">
         <ThemedText className="mb-1">
           Incremento
           {/* : {increment.toFixed(1)} */}

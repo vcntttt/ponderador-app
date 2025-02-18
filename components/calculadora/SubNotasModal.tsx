@@ -41,7 +41,7 @@ const SubNotasModal = ({
         Dividir Nota
       </ThemedText>
       <ThemedText type="label">Resultado</ThemedText>
-      <ThemedCard className="flex-row justify-between items-center p-3 bg-zinc-200">
+      <ThemedCard className="flex-row justify-between items-center p-3">
         <ThemedText>{partialResult.toFixed(2)}</ThemedText>
         <ThemedText className="!text-gray-500">
           {partialPercentage.toFixed(0)}%
@@ -51,14 +51,14 @@ const SubNotasModal = ({
       {subNotes.map((subNote, index) => (
         <View key={index} className="flex-row items-center gap-x-2 mb-2">
           <ThemedTextInput
-            className="flex-1 bg-zinc-200"
+            className="flex-1"
             placeholder="Nota"
             keyboardType="number-pad"
             value={subNote.value}
             onChangeText={(text) => onChangeSubNote(index, "value", text)}
           />
           <ThemedTextInput
-            className="w-1/4 bg-zinc-200"
+            className="w-1/4"
             placeholder="%"
             keyboardType="number-pad"
             value={subNote.percentage}
@@ -78,7 +78,6 @@ const SubNotasModal = ({
         type="outline"
         title="Agregar Nota"
         onPress={onAddSubNote}
-        className="!bg-zinc-200"
       />
       <CustomButton title="Guardar" onPress={onApplySubNotes} />
     </MyModal>

@@ -5,10 +5,13 @@ import { router, useFocusEffect } from "expo-router";
 import { ThemedText } from "@/components/ui/ThemedText";
 import { ESCALA_HISTORY_STORAGE_KEY } from "@/constants/storage";
 import { Ionicons } from "@expo/vector-icons";
+import { useThemeContext } from "@/context/ThemeContext";
+import { ThemedCard } from "../ui/ThemedCard";
 
 export default function SavedScalesList() {
   const [scales, setScales] = useState<any[]>([]);
   const [isExpanded, setIsExpanded] = useState(false);
+  const { currentTheme } = useThemeContext();
 
   const loadScales = useCallback(async () => {
     try {
@@ -47,30 +50,34 @@ export default function SavedScalesList() {
       </View>
     );
   }
-
   return (
     <View>
-      <TouchableOpacity className="my-4 flex-row items-center" onPress={() => setIsExpanded(!isExpanded)}>
-          <ThemedText className="font-semibold flex-1">
-            Últimas escalas generadas (3)
-          </ThemedText>
-          <Ionicons
-            name={isExpanded ? "chevron-up" : "chevron-down"}
-            size={16}
-            color="white"
-          />
+      <TouchableOpacity
+        className="my-4 flex-row items-center"
+        onPress={() => setIsExpanded(!isExpanded)}
+      >
+        <ThemedText className="font-semibold flex-1">
+          Últimas escalas generadas (3)
+        </ThemedText>
+        <Ionicons
+          name={isExpanded ? "chevron-up" : "chevron-down"}
+          size={16}
+          color={currentTheme === "dark" ? "white" : "black"}
+        />
       </TouchableOpacity>
       {isExpanded &&
         (scales.length ? (
           scales.map((item, index) => (
             <TouchableOpacity
               key={index}
-              className="mb-2 p-3 bg-white dark:bg-black/50 rounded-xl"
+              className="mb-3"
               onPress={() => handleNavigateTo(item)}
             >
+              <ThemedCard className="p-3">
               <ThemedText>
                 {item.maxScoreNum} puntos | Incremento: {item.increment}
               </ThemedText>
+              </ThemedCard>
             </TouchableOpacity>
           ))
         ) : (

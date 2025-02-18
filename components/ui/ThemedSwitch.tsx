@@ -9,6 +9,7 @@ interface Props {
   className?: string;
   disabled?: boolean;
   onValueChange: (value: boolean) => void;
+  textType?: "default" | "title" | "subtitle" | "card" | "label";
 }
 
 const isAndroid = Platform.OS === "android";
@@ -19,6 +20,7 @@ export const ThemedSwitch = ({
   className,
   disabled = false,
   onValueChange,
+  textType = "subtitle",
 }: Props) => {
   const switchActiveColor = useThemeColor({}, "primary");
 
@@ -34,7 +36,7 @@ export const ThemedSwitch = ({
         }
       }}
     >
-      {text ? <ThemedText type="subtitle">{text}</ThemedText> : <View />}
+      {text ? <ThemedText type={textType}>{text}</ThemedText> : null}
       <Switch
         pointerEvents={disabled ? "none" : "auto"}
         value={value}

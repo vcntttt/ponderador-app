@@ -121,7 +121,7 @@ const App = () => {
                 onPress={() => openSubNotasModal(note?.subNotas, index)}
                 className={clsx("p-2 rounded-xl", {
                   "bg-light-primary dark:bg-dark-primary": isDivided,
-                  "bg-white dark:bg-black/50": !isDivided,
+                  "border-[1px] border-black/30 dark:border-white/50": !isDivided,
                 })}
               >
                 <Ionicons
@@ -167,7 +167,7 @@ const App = () => {
         )}
       </View>
 
-      <View className="absolute bottom-4 w-full gap-y-2">
+      <View className="absolute bottom-2 w-full gap-y-2">
         {exam && (
           <View>
             <ThemedText type="label">Examen</ThemedText>

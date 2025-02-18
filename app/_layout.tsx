@@ -1,9 +1,5 @@
 import { useEffect } from "react";
-import {
-  DarkTheme,
-  DefaultTheme,
-} from "@react-navigation/native";
-import { useFonts } from "expo-font";
+import { useFonts, Inter_400Regular, Inter_600SemiBold, Inter_700Bold } from "@expo-google-fonts/inter";
 import { Slot } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
@@ -21,28 +17,20 @@ SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
   const colorScheme = useColorScheme();
   const backgroundColor = useThemeColor({}, "background");
-  const [loaded] = useFonts({
-    SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
+
+  const [fontLoaded] = useFonts({
+    Inter_400Regular,
+    Inter_600SemiBold,
+    Inter_700Bold,
   });
 
-  const theme =
-    colorScheme === "dark"
-      ? {
-          ...DarkTheme,
-          colors: { ...DarkTheme.colors, background: backgroundColor },
-        }
-      : {
-          ...DefaultTheme,
-          colors: { ...DefaultTheme.colors, background: backgroundColor },
-        };
-
   useEffect(() => {
-    if (loaded) {
+    if (fontLoaded) {
       SplashScreen.hideAsync();
     }
-  }, [loaded]);
+  }, [fontLoaded]);
 
-  if (!loaded) {
+  if (!fontLoaded) {
     return null;
   }
 
